@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Howler.Tests
 {
-    public class HowlerBegin
+    public class HowlerTests
     {
         [Fact]
         public void TestReturns()
@@ -97,6 +97,28 @@ namespace Howler.Tests
 
             Assert.Single(exampleDb);
             Assert.Equal("hi", exampleDb.Single());
+        }
+
+        [Fact]
+        public void InstanceClassExample()
+        {
+            var howlerIntercept = new InTestHowler();
+
+            howlerIntercept.Register<ExampleInstanceClass, int>(x => x.Three(), () => 5);
+
+            var sut = new ExampleConsumerClass(howlerIntercept);
+            var result = sut.CallInstance();
+            Assert.Equal(5, result);
+        }
+
+        [Fact]
+        public void PrimitiveExample()
+        {
+            var howlerIntercept = new InTestHowler();
+            howlerIntercept.Register<int, bool>(x => x.Equals(x + 1), () => true);
+
+            Assert.False(2.Equals(3));
+            Assert.True(howlerIntercept.Invoke(() => 2.Equals(3)));
         }
     }
 }
