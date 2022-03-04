@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howler", "Howler\Howler.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howler.Tests", "Howler.Tests\Howler.Tests.csproj", "{E118D786-703C-46ED-A263-8EC886D8FB6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonkeyPatcher", "MonkeyPatcher\MonkeyPatcher.csproj", "{5ECAC0DA-6292-441B-B7DD-9ADF80E3E753}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{E118D786-703C-46ED-A263-8EC886D8FB6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E118D786-703C-46ED-A263-8EC886D8FB6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E118D786-703C-46ED-A263-8EC886D8FB6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5ECAC0DA-6292-441B-B7DD-9ADF80E3E753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5ECAC0DA-6292-441B-B7DD-9ADF80E3E753}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5ECAC0DA-6292-441B-B7DD-9ADF80E3E753}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5ECAC0DA-6292-441B-B7DD-9ADF80E3E753}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

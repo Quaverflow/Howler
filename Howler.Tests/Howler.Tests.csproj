@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MonkeyPatcher\MonkeyPatcher.csproj" />
+    <ProjectReference Include="..\Howler\Howler.csproj" />
   </ItemGroup>
 
 </Project>

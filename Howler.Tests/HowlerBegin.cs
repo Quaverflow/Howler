@@ -1,8 +1,5 @@
 using System;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using MonkeyPatcher.MonkeyPatch.Interfaces;
-using MonkeyPatcher.MonkeyPatch.Shared;
 using Xunit;
 
 namespace Howler.Tests
@@ -21,7 +18,7 @@ namespace Howler.Tests
         public async Task TestReturnsAsync()
         {
             var howler = new Howler();
-            var x = await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"));
+            var x = await howler.InvokeAsync(() => ExampleStaticClass.ReturnLengthAsync("hey"));
             Assert.Equal(3, x);
         }
 
@@ -29,7 +26,7 @@ namespace Howler.Tests
         public void TestVoid()
         {
             var howler = new Howler();
-            var ex = Assert.Throws<Exception>(() => howler.Invoke(ExampleStaticClass.VoidLength));
+            var ex = Assert.Throws<Exception>(() => howler.InvokeVoid(() => ExampleStaticClass.VoidLength()));
             Assert.Equal("I was called!", ex.Message);
         }
 
@@ -37,7 +34,7 @@ namespace Howler.Tests
         public async Task TestReturnsAsyncTask()
         {
             var howler = new Howler();
-            await howler.Invoke(ExampleStaticClass.ReturnAsync);
+            await howler.InvokeTask(() => ExampleStaticClass.ReturnAsync());
             Assert.True(ExampleStaticClass.Check);
         }
 
@@ -45,17 +42,15 @@ namespace Howler.Tests
         public void SimpleUsageExample()
         {
             //real
-            var howler = new Howler();
+            var howler = new InTestHowler();
 
             var sut = new ExampleConsumerClass(howler);
             var result = sut.SimpleMethod("Hello");
             Assert.Equal(5, result);
 
-            //Proxied
-            var howlerProxy = new Proxy<IHowler>();
-            howlerProxy.Setup(x => x.Invoke(() => ExampleStaticClass.ReturnLength(Any<string>.Value)), () => 15);
-
-            var sut2 = new ExampleConsumerClass(howlerProxy.Object);
+            //Registered
+            howler.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 15);
+            var sut2 = new ExampleConsumerClass(howler);
             var result2 = sut2.SimpleMethod("Hello");
             Assert.Equal(15, result2);
         }
@@ -71,73 +66,17 @@ namespace Howler.Tests
             Assert.Equal(30, result);
 
             //Proxied
-            var howlerProxy = new Proxy<IHowler>();
-            howlerProxy.Setup(x => x.Invoke(() => ExampleStaticClass.ReturnLength(Any<string>.Value)), () => 3);
-            howlerProxy.Setup(x => x.Invoke(() => ExampleStaticClass2.ReturnLength(Any<string>.Value)), () => 2);
-            howlerProxy.Setup(x => x.Invoke(() => ExampleStaticClass.ReturnLengthAsync(Any<string>.Value)), () => Task.FromResult(4));
+            var howlerIntercept = new InTestHowler();
+            howlerIntercept.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 3);
+            howlerIntercept.Register(() => ExampleStaticClass2.ReturnLength(A<string>.Value), () => 2);
+            howlerIntercept.Register(() => ExampleStaticClass.ReturnLengthAsync(A<string>.Value), () => Task.FromResult(4));
 
-            var sut2 = new ExampleConsumerClass(howlerProxy.Object);
+            var sut2 = new ExampleConsumerClass(howlerIntercept);
             var result2 = await sut2.ComplexMethod("Hello");
-            Assert.Equal(10, result2);
+            Assert.Equal(11, result2);
         }
 
-    }
 
-    public class ExampleConsumerClass
-    {
-        private readonly IHowler _howler;
 
-        public ExampleConsumerClass(IHowler howler)
-        {
-            _howler = howler;
-        }
-
-        public int SimpleMethod(string s) => _howler.Invoke(() => ExampleStaticClass.ReturnLength(s));
-        public async Task<int> ComplexMethod(string s)
-        {
-            var y = _howler.Invoke(() => ExampleStaticClass2.ReturnLength(s));
-            var x = await _howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hello"));
-            var z = _howler.Invoke(() => ExampleStaticClass.ReturnLength(s));
-            return z + x * y;
-        }
-    }
-
-    public static class ExampleStaticClass
-    {
-        public static bool Check { get; set; }
-        public static int ReturnLength(string s) => s.Length;
-        public static async Task<int> ReturnLengthAsync(string s) => await Task.FromResult(s.Length);
-        public static async Task ReturnAsync()
-        {
-            Check = true;
-            await Task.CompletedTask;
-        }
-
-        public static void VoidLength() => throw new Exception("I was called!");
-    } 
-    
-    public static class ExampleStaticClass2
-    {
-        public static int ReturnLength(string s) => s.Length;
-    }
-
-    public class Howler : IHowler
-    {
-        public TResult Invoke<TResult>(Func<TResult> original) => original.Invoke();
-
-        public void Invoke(Action original) => original.Invoke();
-
-        public Task<TResult> Invoke<TResult>(Func<Task<TResult>> original) => original.Invoke();
-
-        public Task Invoke(Func<Task> original) => original.Invoke();
-
-    }
-
-    public interface IHowler
-    {
-        TResult Invoke<TResult>(Func<TResult> original);
-        void Invoke(Action original);
-        Task<TResult> Invoke<TResult>(Func<Task<TResult>> original);
-        Task Invoke(Func<Task> original);
     }
 }
