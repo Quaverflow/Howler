@@ -23,6 +23,7 @@ public class InTestHowler : IHowler
         }
     }
 
+
     public TResult Invoke<TResult>(Expression<Func<TResult>> original)
     {
         if (original.Body is MethodCallExpression methodCall && _setups.TryGetValue(methodCall.Method.GetKey(), out var substitute))
@@ -44,31 +45,5 @@ public class InTestHowler : IHowler
         }
 
         original.Compile().Invoke();
-    }
-
-    public Task<TResult> InvokeAsync<TResult>(Expression<Func<Task<TResult>>> original)
-    {
-        if (_setups.TryGetValue(((MethodCallExpression)original.Body).Method.GetKey(), out var substitute))
-        {
-            if (substitute.DynamicInvoke() is Task<TResult> result)
-            {
-                return result;
-            }
-        }
-
-        return original.Compile().Invoke();
-    }
-
-    public Task InvokeTask(Expression<Func<Task>> original)
-    {
-        if (_setups.TryGetValue(((MethodCallExpression)original.Body).Method.GetKey(), out var substitute))
-        {
-            if (substitute.DynamicInvoke() is Task result)
-            {
-                return result;
-            }
-        }
-
-        return original.Compile().Invoke();
     }
 }
