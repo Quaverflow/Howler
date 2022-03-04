@@ -15,7 +15,7 @@ public class ExampleConsumerClass
     public async Task<int> ComplexMethod(string s)
     {
         var y = _howler.Invoke(() => ExampleStaticClass2.ReturnLength(s));
-        var x = await _howler.InvokeAsync(() => ExampleStaticClass.ReturnLengthAsync("hello"));
+        var x = await _howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hello"));
         var z = _howler.Invoke(() => ExampleStaticClass.ReturnLength(s));
         return z + x * y;
     }

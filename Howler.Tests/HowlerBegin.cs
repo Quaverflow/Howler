@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,7 +20,7 @@ namespace Howler.Tests
         public async Task TestReturnsAsync()
         {
             var howler = new Howler();
-            var x = await howler.InvokeAsync(() => ExampleStaticClass.ReturnLengthAsync("hey"));
+            var x = await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"));
             Assert.Equal(3, x);
         }
 
@@ -34,7 +36,7 @@ namespace Howler.Tests
         public async Task TestReturnsAsyncTask()
         {
             var howler = new Howler();
-            await howler.InvokeTask(() => ExampleStaticClass.ReturnAsync());
+            await howler.Invoke(() => ExampleStaticClass.ReturnAsync());
             Assert.True(ExampleStaticClass.Check);
         }
 
@@ -42,15 +44,16 @@ namespace Howler.Tests
         public void SimpleUsageExample()
         {
             //real
-            var howler = new InTestHowler();
+            var howler = new Howler();
 
             var sut = new ExampleConsumerClass(howler);
             var result = sut.SimpleMethod("Hello");
             Assert.Equal(5, result);
 
             //Registered
-            howler.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 15);
-            var sut2 = new ExampleConsumerClass(howler);
+            var howlerIntercept = new InTestHowler();
+            howlerIntercept.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 15);
+            var sut2 = new ExampleConsumerClass(howlerIntercept);
             var result2 = sut2.SimpleMethod("Hello");
             Assert.Equal(15, result2);
         }
@@ -65,7 +68,7 @@ namespace Howler.Tests
             var result = await sut.ComplexMethod("Hello");
             Assert.Equal(30, result);
 
-            //Proxied
+            //Registered
             var howlerIntercept = new InTestHowler();
             howlerIntercept.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 3);
             howlerIntercept.Register(() => ExampleStaticClass2.ReturnLength(A<string>.Value), () => 2);
@@ -76,7 +79,24 @@ namespace Howler.Tests
             Assert.Equal(11, result2);
         }
 
+        [Fact]
+        public void CallbackExample()
+        {
+            var howlerIntercept = new InTestHowler();
 
+            var exampleDb = new List<string>();
+            howlerIntercept.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () =>
+            {
+                exampleDb.Add("hi");
+                return 15;
+            });
 
+            var sut = new ExampleConsumerClass(howlerIntercept);
+            var result = sut.SimpleMethod("Hello");
+            Assert.Equal(15, result);
+
+            Assert.Single(exampleDb);
+            Assert.Equal("hi", exampleDb.Single());
+        }
     }
 }
