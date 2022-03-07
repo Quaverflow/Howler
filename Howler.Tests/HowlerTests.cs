@@ -6,13 +6,35 @@ using Xunit;
 
 namespace Howler.Tests
 {
+
+    public static class Registrator
+    {
+        public static readonly Guid TryCatchStructure = Guid.NewGuid();
+        public static void TryCatchStructureShape()
+        {
+            HowlerRegistration.AddStructure(TryCatchStructure, x =>
+            {
+                try
+                {
+                    return x.DynamicInvoke();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            });
+        }
+    }
+
     public class HowlerTests
     {
         [Fact]
         public void TestReturns()
         {
+            Registrator.TryCatchStructureShape();
             var howler = new Howler();
-            var x = howler.Invoke(() => ExampleStaticClass.ReturnLength("hey"));
+            var x = howler.Invoke(() => ExampleStaticClass.ReturnLength("hey"), Registrator.TryCatchStructure);
             Assert.Equal(3, x);
         }
 

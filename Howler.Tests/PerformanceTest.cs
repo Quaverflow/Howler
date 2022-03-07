@@ -7,31 +7,34 @@ namespace Howler.Tests;
 
 public class PerformanceTest
 {
-    [Fact]
-    public void Test()
+    [Theory]
+    [InlineData(10)]
+    [InlineData(100)]
+    [InlineData(1000)]
+    [InlineData(10000)]
+    public void Test(int iterations)
     {
         Thread.Sleep(100);
         var stopwatch = new Stopwatch();
         var howler = new Howler();
 
-        var iterations = 100;
 
         stopwatch.Restart();
 
         for (var i = 0; i < iterations; i++)
         {
-          var p =  Hello();
+            var p = Hello();
         }
         var normal = stopwatch.ElapsedMilliseconds;
 
         stopwatch.Restart();
         for (var i = 0; i < iterations; i++)
         {
-          var p = howler.Invoke(() => Hello());
+            var p = howler.Invoke(() => Hello());
         }
 
         var howl = stopwatch.ElapsedMilliseconds;
-        
+
         Assert.True(true, $"normal{normal}, howler{howl}");
     }
 
@@ -39,8 +42,11 @@ public class PerformanceTest
     public string Hello()
     {
         var x = "hopera";
-        var p = 
-            x.Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a')
+        for (int i = 0; i < 10; i++)
+        {
+
+
+            x+= x.Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a')
             .Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a')
             .Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a')
             .Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a')
@@ -60,6 +66,7 @@ public class PerformanceTest
             .Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a')
             .Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a')
             .Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a').Append('a');
-             return "hello" + p;
+        }
+        return x;
     }
 }

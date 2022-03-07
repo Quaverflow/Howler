@@ -24,7 +24,7 @@ public class InTestHowler : IHowler
     }
 
 
-    public TResult Invoke<TResult>(Expression<Func<TResult>> original)
+    public TResult? Invoke<TResult>(Expression<Func<TResult?>> original, Guid? id = null)
     {
         if (original.Body is MethodCallExpression methodCall && _setups.TryGetValue(methodCall.Method.GetKey(), out var substitute))
         {
@@ -37,7 +37,7 @@ public class InTestHowler : IHowler
         return original.Compile().Invoke();
     }
 
-    public void InvokeVoid(Expression<Action> original)
+    public void InvokeVoid(Expression<Action> original, Guid? id = null)
     {
         if (_setups.TryGetValue(((MethodCallExpression)original.Body).Method.GetKey(), out var substitute))
         {
