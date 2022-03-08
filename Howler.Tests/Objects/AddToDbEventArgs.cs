@@ -1,6 +1,6 @@
 using System;
 
-namespace Howler.Tests;
+namespace Howler.Tests.Objects;
 
 public class AddToDbEventArgs : EventArgs
 {

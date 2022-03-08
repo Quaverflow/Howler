@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Howler.Tests;
+namespace Howler.Tests.Objects;
 
 public static class ExampleStaticClass
 {

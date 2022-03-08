@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Howler.Tests;
+namespace Howler.Tests.Objects;
 
 public class ExampleConsumerClass
 {
