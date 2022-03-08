@@ -6,45 +6,73 @@ using Xunit;
 
 namespace Howler.Tests
 {
-
-    public static class Registrator
-    {
-        public static readonly Guid TryCatchStructure = Guid.NewGuid();
-        public static void TryCatchStructureShape()
-        {
-            HowlerRegistration.AddStructure(TryCatchStructure, x =>
-            {
-                try
-                {
-                    return x.DynamicInvoke();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-            });
-        }
-    }
-
     public class HowlerTests
     {
-        [Fact]
-        public void TestReturns()
+        public HowlerTests()
         {
-            Registrator.TryCatchStructureShape();
+            HowlerStructures.AllStructures();
+        }
+
+        #region TryCatch
+        [Fact]
+        public void TestReturnsThroughTryCatch_Pass()
+        {
             var howler = new Howler();
-            var x = howler.Invoke(() => ExampleStaticClass.ReturnLength("hey"), Registrator.TryCatchStructure);
-            Assert.Equal(3, x);
+            var result = howler.Invoke(() => ExampleStaticClass.ReturnLength("hey"), HowlerStructures.TryCatchStructureId);
+            Assert.Equal(3, result);
         }
 
         [Fact]
-        public async Task TestReturnsAsync()
+        public void TestReturnsThroughTryCatch_Fail()
         {
             var howler = new Howler();
-            var x = await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"));
-            Assert.Equal(3, x);
+            var result = Assert.Throws<InvalidOperationException>(() => howler.Invoke(() => ExampleStaticClass.ReturnLength(null), HowlerStructures.TryCatchStructureId));
+            Assert.StartsWith("uh-oh", result.Message);
         }
+        #endregion
+
+        #region Events
+
+        private string _hello;
+
+        [Fact]
+        public async Task TestEvent_Simple()
+        {
+            var howler = new Howler();
+
+            HowlerStructures.SayHello += SayHello;
+
+            await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), HowlerStructures.SayHelloRaisingStructureId);
+            Assert.Equal("hello", _hello);
+
+            HowlerStructures.SayHello -= SayHello;
+        }
+
+        private void SayHello(object? sender, EventArgs e)
+        {
+            _hello = "hello";
+        }
+
+        private readonly List<string> _db = new();
+
+        [Fact]
+        public async Task TestEvent_AddToDb()
+        {
+            var howler = new Howler();
+            HowlerStructures.AddToDb += AddHelloToDb;
+
+            await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), HowlerStructures.AddToDbRaisingStructureId);
+            Assert.Single(_db);
+            Assert.Equal("Hello!", _db[0]);
+
+            HowlerStructures.AddToDb -= AddHelloToDb;
+        }
+        private void AddHelloToDb(object? sender, AddToDbEventArgs e)
+        {
+            _db.Add(e.Hello);
+        }
+
+        #endregion
 
         [Fact]
         public void TestVoid()

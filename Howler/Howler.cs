@@ -6,7 +6,7 @@ namespace Howler;
 public class Howler : IHowler
 {
 
-    public TResult? Invoke<TResult>(Expression<Func<TResult?>> original, Guid? id = null)
+    public TResult Invoke<TResult>(Expression<Func<TResult>> original, Guid? id = null)
     {
         if (id == null)
         {
@@ -19,7 +19,7 @@ public class Howler : IHowler
             return result != null ? (TResult)result : default;
         }
 
-        throw new InvalidOperationException($"The requested structure was not found for id {id}");
+        throw new InvalidOperationException($"The requested structure was not found for id: {id}");
     }
 
     public void InvokeVoid(Expression<Action> original, Guid? id = null)
@@ -35,6 +35,6 @@ public class Howler : IHowler
             func.Invoke(original.CompileFast());
         }
 
-        throw new InvalidOperationException($"The requested structure was not found for id {id}");
+        throw new InvalidOperationException($"The requested structure was not found for id: {id}");
     }
 }

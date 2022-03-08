@@ -21,11 +21,13 @@ public static class HowlerRegistration
     /// <summary>
     /// Manually add structure to the dictionary
     /// </summary>
-    /// <param name="structures"></param>
-    public static void AddStructure(Guid id, Func<Delegate, object?> func)
-    {
-        Structures.Add(id, func);
-    }
+    /// <param name="func"></param>
+    /// <param name="id"></param>
+    public static void AddStructure(Guid id, Func<Delegate, object?> func) => Structures.Add(id, func);
+
+    public static void RemoveStructure(Guid id) => Structures.Remove(id);
+
+    public static void UpdateStructure(Guid id, Func<Delegate, object?> func) => Structures[id] = func;
 
     /// <summary>
     /// Inject the howler and optional structures to wrap around your method.
