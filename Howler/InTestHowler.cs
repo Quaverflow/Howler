@@ -23,7 +23,6 @@ public class InTestHowler : IHowler
         }
     }
 
-
     public TResult Invoke<TResult>(Expression<Func<TResult>> original, Guid? id = null)
     {
         if (original.Body is MethodCallExpression methodCall && _setups.TryGetValue(methodCall.Method.GetKey(), out var substitute))

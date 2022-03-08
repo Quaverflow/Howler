@@ -1,4 +1,4 @@
-namespace Howler.Tests.Objects;
+namespace Howler.Tests.Objects.ExampleObjects;
 
 public static class ExampleStaticClass2
 {

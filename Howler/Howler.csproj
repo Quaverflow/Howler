@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FastExpressionCompiler" Version="3.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Monkey.Utilities" Version="1.0.0" />
   </ItemGroup>

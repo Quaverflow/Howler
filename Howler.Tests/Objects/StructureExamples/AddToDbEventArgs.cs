@@ -1,6 +1,6 @@
 using System;
 
-namespace Howler.Tests.Objects;
+namespace Howler.Tests.Objects.StructureExamples;
 
 public class AddToDbEventArgs : EventArgs
 {

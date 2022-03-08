@@ -1,20 +1,23 @@
+using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Howler;
 
-public static class HowlerRegistration
+public class HowlerRegistration
 {
     internal static Dictionary<Guid, Func<Delegate, object?>> Structures = new();
+    internal static bool ServicesRegistered;
 
     /// <summary>
     /// Manually add structures to the dictionary
     /// </summary>
     /// <param name="structures"></param>
-    public static void AddStructures(params (Guid, Func<Delegate, object?>)[] structures)
+    public void AddStructures(params (Guid, Func<Delegate, object?>)[] structures)
     {
         foreach (var (id, func) in structures)
         {
-            Structures.Add(id, func);
+            Structures.TryAdd(id, func);
         }
     }
 
@@ -23,22 +26,49 @@ public static class HowlerRegistration
     /// </summary>
     /// <param name="func"></param>
     /// <param name="id"></param>
-    public static void AddStructure(Guid id, Func<Delegate, object?> func) => Structures.Add(id, func);
+    public void AddStructure(Guid id, Func<Delegate, object?> func) => Structures.TryAdd(id, func);
 
-    public static void RemoveStructure(Guid id) => Structures.Remove(id);
+    public void RemoveStructure(Guid id) => Structures.Remove(id);
 
-    public static void UpdateStructure(Guid id, Func<Delegate, object?> func) => Structures[id] = func;
+    public void UpdateStructure(Guid id, Func<Delegate, object?> func) => Structures[id] = func;
+}
 
+public static class HowlerRegistrationExtensions
+{
     /// <summary>
     /// Inject the howler and optional structures to wrap around your method.
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="structures"></param>
     /// <returns></returns>
-    public static IServiceCollection RegisterHowler(this IServiceCollection services, params (Guid, Func<Delegate, object?>)[] structures)
+    public static IServiceCollection RegisterHowler(this IServiceCollection services)
     {
         services.AddTransient<IHowler, Howler>();
-        AddStructures(structures);
         return services;
     }
+
+    public static IApplicationBuilder RegisterHowlerMiddleware(this IApplicationBuilder app)
+    {
+        if (!HowlerRegistration.ServicesRegistered)
+        {
+            var registrations = Assembly.GetExecutingAssembly()
+                .GetTypes().Where(type => typeof(IHowlerStructureBuilder).IsAssignableFrom(type) && !type.IsInterface);
+
+            var serviceProvider = app.ApplicationServices;
+
+            foreach (var registration in registrations)
+            {
+                var service = serviceProvider.GetService(registration) as IHowlerStructureBuilder;
+                service?.InvokeRegistrations();
+            }
+
+            HowlerRegistration.ServicesRegistered = true;
+        }
+
+        return app;
+    }
+}
+
+public interface IHowlerStructureBuilder
+{
+    void InvokeRegistrations();
 }

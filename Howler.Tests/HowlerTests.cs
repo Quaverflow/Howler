@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Howler.Tests.Objects;
+using Howler.Tests.Objects.ExampleObjects;
+using Howler.Tests.Objects.StructureExamples;
 using Xunit;
 
 namespace Howler.Tests
@@ -19,7 +21,7 @@ namespace Howler.Tests
         public void TestReturnsThroughTryCatch_Pass()
         {
             var howler = new Howler();
-            var result = howler.Invoke(() => ExampleStaticClass.ReturnLength("hey"), HowlerStructures.TryCatchStructureId);
+            var result = howler.Invoke(() => ExampleStaticClass.ReturnLength("hey"), StructuresIds.TryCatchStructureId);
             Assert.Equal(3, result);
         }
 
@@ -27,7 +29,7 @@ namespace Howler.Tests
         public void TestReturnsThroughTryCatch_Fail()
         {
             var howler = new Howler();
-            var result = Assert.Throws<InvalidOperationException>(() => howler.Invoke(() => ExampleStaticClass.ReturnLength(null), HowlerStructures.TryCatchStructureId));
+            var result = Assert.Throws<InvalidOperationException>(() => howler.Invoke(() => ExampleStaticClass.ReturnLength(null), StructuresIds.TryCatchStructureId));
             Assert.StartsWith("uh-oh", result.Message);
         }
         #endregion
@@ -43,7 +45,7 @@ namespace Howler.Tests
 
             HowlerStructures.SayHello += SayHello;
 
-            await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), HowlerStructures.SayHelloRaisingStructureId);
+            await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), StructuresIds.SayHelloRaisingStructureId);
             Assert.Equal("hello", _hello);
 
             HowlerStructures.SayHello -= SayHello;
@@ -62,7 +64,7 @@ namespace Howler.Tests
             var howler = new Howler();
             HowlerStructures.AddToDb += AddHelloToDb;
 
-            await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), HowlerStructures.AddToDbRaisingStructureId);
+            await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), StructuresIds.AddToDbRaisingStructureId);
             Assert.Single(_db);
             Assert.Equal("Hello!", _db[0]);
 
