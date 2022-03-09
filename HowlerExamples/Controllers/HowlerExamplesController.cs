@@ -21,7 +21,8 @@ namespace HowlerExamples.Controllers
         [HttpGet]
         public IActionResult GetDataNormal()
         {
-            var result = $"{_normalService.GetData()}\n{string.Join("\n", _logger.GetLogs())}";
+            var data = _normalService.GetData()
+            var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
             _logger.Clear();
             return Ok(result);
         }     
@@ -29,7 +30,8 @@ namespace HowlerExamples.Controllers
         [HttpGet]
         public IActionResult GetDataHowler()
         {
-            var result = _serviceUsingHowler.GetData() + "\n" + string.Join("\n", _logger.GetLogs());
+            var data = _serviceUsingHowler.GetData();
+            var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
             _logger.Clear();
             return Ok(result);
         }       
@@ -37,7 +39,8 @@ namespace HowlerExamples.Controllers
         [HttpGet]
         public IActionResult GetMoreDataHowler()
         {
-            var result = _serviceUsingHowler.GetMoreData() + "\n" + string.Join("\n", _logger.GetLogs());
+            var data = _serviceUsingHowler.GetMoreData();
+            var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
             _logger.Clear();
             return Ok(result);
         }
