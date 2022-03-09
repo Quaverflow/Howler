@@ -1,4 +1,4 @@
-﻿namespace Howler.Tests.Objects.StructureExamples;
+﻿namespace HowlerExamples.StructureExamples;
 
 public interface IFakeLogger
 {

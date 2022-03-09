@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Howler.Tests.Objects.StructureExamples;
+﻿namespace HowlerExamples.StructureExamples;
 
 public class FakeLogger : IFakeLogger
 {

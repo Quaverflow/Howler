@@ -5,6 +5,13 @@ namespace Howler;
 
 public class Howler : IHowler
 {
+    //private readonly IServiceProvider _serviceProvider;
+
+    //public Howler(IServiceProvider serviceProvider)
+    //{
+    //    _serviceProvider = serviceProvider;
+    //}
+
     public TResult Invoke<TResult>(Expression<Func<TResult>> original, Guid? id = null)
     {
         if (id == null)
