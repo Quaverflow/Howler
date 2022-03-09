@@ -1,4 +1,4 @@
-﻿namespace HowlerExamples.Structures;
+﻿namespace HowlerExamples.Models;
 
 public class Dto
 {

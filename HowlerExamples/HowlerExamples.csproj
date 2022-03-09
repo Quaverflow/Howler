@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Howler.Tests\Howler.Tests.csproj" />
-    <ProjectReference Include="..\HowlerExamplesShared\HowlerExamplesShared.csproj" />
     <ProjectReference Include="..\Howler\Howler.csproj" />
   </ItemGroup>
 

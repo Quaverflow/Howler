@@ -47,8 +47,6 @@ public class InjectedStructure : IHowlerStructureBuilder
             var logger = _provider.GetService<IFakeLogger>();
             var accessor = _provider.GetService<IHttpContextAccessor>();
             var authProvider = _provider.GetService<IAuthProvider>();
-            var humanCounter =  HumanCounter.GetSingleton();
-            humanCounter.Subscribe(HumanObserverFactory.Observer);
 
             logger.Log($"The service call to {accessor.HttpContext?.Request.GetDisplayUrl()} has started");
             try

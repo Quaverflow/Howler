@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HowlerExamples.Models;
 
 namespace HowlerExamples.Structures;
 
