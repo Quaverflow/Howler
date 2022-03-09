@@ -21,7 +21,7 @@ namespace HowlerExamples.Controllers
         [HttpGet]
         public IActionResult GetDataNormal()
         {
-            var data = _normalService.GetData()
+            var data = _normalService.GetData();
             var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
             _logger.Clear();
             return Ok(result);
