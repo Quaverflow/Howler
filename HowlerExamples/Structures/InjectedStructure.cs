@@ -1,7 +1,8 @@
 ﻿using Howler;
 using Howler.Tests.Objects.StructureExamples;
+using HowlerExamples.Services;
 
-namespace HowlerExamples.StructureExamples;
+namespace HowlerExamples.Structures;
 
 public class InjectedStructure : IHowlerStructureBuilder
 {
@@ -15,8 +16,19 @@ public class InjectedStructure : IHowlerStructureBuilder
     {
         HowlerRegistration.AddStructure(StructuresIds.LoggerStructureId, x =>
         {
-            _logger.Log("hello");
-            return x.DynamicInvoke();
+            _logger.Log("The service was called");
+            try
+            {
+                var result = x.DynamicInvoke();
+
+                _logger.Log("The service call succeeded");
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"The service failed with exception {e.Message}");
+                throw;
+            }
         });
     }
 

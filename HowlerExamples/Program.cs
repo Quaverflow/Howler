@@ -1,6 +1,7 @@
 using System.Reflection;
 using Howler;
-using HowlerExamples.StructureExamples;
+using HowlerExamples.Services;
+using HowlerExamples.Structures;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,9 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddScoped<InjectedStructure>();
-builder.Services.AddScoped<IFakeLogger, FakeLogger>();
+builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
+builder.Services.AddScoped<IServiceUsingHowler, ServiceUsingHowler>();
+builder.Services.AddScoped<INormalService, NormalService>();
 builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
 
 
