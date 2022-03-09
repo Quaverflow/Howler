@@ -9,7 +9,7 @@ counter.Subscribe(HumanObserverFactory.Observer);
 while (true)
 {
     Thread.Sleep(100);
-    if (QueueSystem.HumansCreated.Count > 0)
+    if (QueueSystem.HumansCreated.FirstOrDefault() != null)
     {
         Console.WriteLine(QueueSystem.HumansCreated.Dequeue());
     }

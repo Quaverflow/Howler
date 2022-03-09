@@ -9,9 +9,9 @@ public class InTestHowler : IHowler
 
     public void Register<TResult>(Expression<Func<TResult>> method, Func<TResult> substitute)
     {
-        if (method.Body.NodeType == ExpressionType.Call)
+        if (method.Body is MethodCallExpression methodCall)
         {
-            _setups.Add(((MethodCallExpression)method.Body).Method.GetKey(), substitute);
+            _setups.Add(methodCall.Method.GetKey(), substitute);
         }
     }
 

@@ -84,6 +84,13 @@ namespace Howler.Tests
             var ex = Assert.Throws<Exception>(() => howler.InvokeVoid(() => ExampleStaticClass.VoidLength()));
             Assert.Equal("I was called!", ex.Message);
         }
+        [Fact]
+        public void Tesx()
+        {
+            var howler = new InTestHowler();
+            howler.Register(() => "hello", () => "goodbye");
+            Assert.Equal("goodbye", howler.Invoke(()=> "hello"));
+        }
 
         [Fact]
         public async Task TestReturnsAsyncTask()

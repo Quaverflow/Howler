@@ -7,34 +7,34 @@ namespace HowlerExamples.Structures;
 
 public class InjectedStructure : IHowlerStructureBuilder
 {
-    private readonly IFakeLogger _logger;
-    private readonly IHttpContextAccessor _accessor;
-    private readonly IAuthProvider _authProvider;
+    private readonly IServiceProvider _provider;
 
-    public InjectedStructure(IFakeLogger logger, IHttpContextAccessor accessor, IAuthProvider authProvider)
+    public InjectedStructure(IServiceProvider provider)
     {
-        _logger = logger;
-        _accessor = accessor;
-        _authProvider = authProvider;
+        _provider = provider;
     }
 
     private void RegisterGetStructure()
     {
         HowlerRegistration.AddStructure(StructuresIds.GetStructureId, x =>
         {
-            _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} has started");
+           var logger = _provider.GetService<IFakeLogger>();
+           var accessor = _provider.GetService<IHttpContextAccessor>();
+           var authProvider = _provider.GetService<IAuthProvider>();
+
+            logger.Log($"The service call to {accessor.HttpContext?.Request.GetDisplayUrl()} has started");
             try
             {
-                _authProvider.HasAccess(true);
+                authProvider.HasAccess(true);
 
                 var result = x.DynamicInvoke();
 
-                _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} succeeded");
+                logger.Log($"The service call to {accessor.HttpContext?.Request.GetDisplayUrl()} succeeded");
                 return result;
             }
             catch (Exception e)
             {
-                _logger.Log($"The service  call to {_accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
+                logger.Log($"The service  call to {accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
                 throw;
             }
         });
@@ -44,23 +44,26 @@ public class InjectedStructure : IHowlerStructureBuilder
     {
         HowlerRegistration.AddStructure(StructuresIds.PostStructureId, x =>
         {
+            var logger = _provider.GetService<IFakeLogger>();
+            var accessor = _provider.GetService<IHttpContextAccessor>();
+            var authProvider = _provider.GetService<IAuthProvider>();
             var humanCounter =  HumanCounter.GetSingleton();
             humanCounter.Subscribe(HumanObserverFactory.Observer);
 
-            _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} has started");
+            logger.Log($"The service call to {accessor.HttpContext?.Request.GetDisplayUrl()} has started");
             try
             {
-                _authProvider.HasAccess(true);
+                authProvider.HasAccess(true);
 
                 var result = x.DynamicInvoke();
 
-                _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} succeeded");
+                logger.Log($"The service call to {accessor.HttpContext?.Request.GetDisplayUrl()} succeeded");
                 return result;
             }
             catch (Exception e)
             {
-                _logger.Log(
-                    $"The service  call to {_accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
+                logger.Log(
+                    $"The service  call to {accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
                 throw;
             }
             finally
