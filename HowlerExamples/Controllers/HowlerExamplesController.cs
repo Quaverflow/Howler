@@ -1,4 +1,5 @@
 using HowlerExamples.Services;
+using HowlerExamples.Structures;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HowlerExamples.Controllers
@@ -40,6 +41,17 @@ namespace HowlerExamples.Controllers
         public IActionResult GetMoreDataHowler()
         {
             var data = _serviceUsingHowler.GetMoreData();
+            var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
+            _logger.Clear();
+            return Ok(result);
+        }
+
+
+        [HttpPost]
+        public IActionResult PostDataHowler([FromBody] Dto dto)
+        {
+            var data = _serviceUsingHowler.PostData(dto);
+            HumanObserverFactory.Observer.HumanAdded(dto);
             var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
             _logger.Clear();
             return Ok(result);

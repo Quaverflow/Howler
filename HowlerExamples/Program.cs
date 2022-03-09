@@ -14,7 +14,9 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddScoped<InjectedStructure>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
+builder.Services.AddScoped<IAuthProvider, AuthProvider>();
 builder.Services.AddScoped<IServiceUsingHowler, ServiceUsingHowler>();
 builder.Services.AddScoped<INormalService, NormalService>();
 builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
