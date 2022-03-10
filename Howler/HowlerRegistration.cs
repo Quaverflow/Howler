@@ -1,37 +1,28 @@
 namespace Howler;
 
-public static class HowlerRegistration
+public class HowlerRegistration
 {
     internal static Dictionary<Guid, Func<Delegate, object?>> Structures = new();
-    internal static Dictionary<Guid, Func<Delegate, IHowlerData, object?>> StructuresWithData = new();
-    internal static bool ServicesRegistered;
+    internal static Dictionary<Guid, Func<Delegate, object, object?>> StructuresWithHowlerData = new();
 
     /// <summary>
-    /// Manually add structures to the dictionary
-    /// </summary>
-    /// <param name="structures"></param>
-    public static void AddStructures(params (Guid, Func<Delegate, object?>)[] structures)
-    {
-        foreach (var (id, func) in structures)
-        {
-            Structures.Add(id, func);
-        }
-    }
-
-    /// <summary>
-    /// Manually add structure to the dictionary
+    /// Register a structure
     /// </summary>
     /// <param name="func"></param>
     /// <param name="id"></param>
     public static void AddStructure(Guid id, Func<Delegate, object?> func) => Structures.Add(id, func);
-    public static void AddStructure(Guid id, Func<Delegate, IHowlerData, object?> func) => StructuresWithData.Add(id, func);
-
-    public static void RemoveStructure(Guid id) => Structures.Remove(id);
-
-    public static void UpdateStructure(Guid id, Func<Delegate, object?> func) => Structures[id] = func;
+    public static void AddStructure(Guid id, Func<Delegate, object, object?> func) => StructuresWithHowlerData.Add(id, func);
 }
 
-public interface IHowlerData
+public class HowlerRegistration<T>
 {
-
+    internal static Dictionary<Guid, Func<Delegate, T, object?>> Structures = new();
+    
+    /// <summary>
+    /// Register a structure that accepts data
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="func"></param>
+    public static void AddStructure(Guid id, Func<Delegate, T, object?> func) => Structures.Add(id, func);
 }
+

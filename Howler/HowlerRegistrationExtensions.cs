@@ -6,6 +6,8 @@ namespace Howler;
 
 public static class HowlerRegistrationExtensions
 {
+    private static bool _servicesRegistered;
+
     /// <summary>
     /// Registers all the <see cref="IHowlerStructureBuilder"/>.
     /// </summary>
@@ -28,7 +30,7 @@ public static class HowlerRegistrationExtensions
 
     public static IApplicationBuilder RegisterHowlerMiddleware(this IApplicationBuilder app)
     {
-        if (!HowlerRegistration.ServicesRegistered)
+        if (!_servicesRegistered)
         {
             var scope = app.ApplicationServices.CreateScope(); 
             var services = scope.ServiceProvider.GetServices<IHowlerStructureBuilder>();
@@ -37,7 +39,7 @@ public static class HowlerRegistrationExtensions
                 service.InvokeRegistrations();
             }
 
-            HowlerRegistration.ServicesRegistered = true;
+            _servicesRegistered = true;
         }
 
         return app;

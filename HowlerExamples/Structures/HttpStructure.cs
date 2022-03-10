@@ -39,10 +39,9 @@ public class HttpStructure : IHttpStructure
         };
     }
 
-    public object? PostStructure(Delegate method, IHowlerData data)
+    public object? PostStructure(Delegate method, object data)
     {
-
-        _logger.Log($"received successfully {data.ToJson()}");
+        _logger.Log($"received successfully from IHowlerData {data.ToJson()}");
 
         _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} has started");
         try
@@ -59,5 +58,10 @@ public class HttpStructure : IHttpStructure
             _logger.Log($"The service  call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
             throw;
         };
+    }
+    public object? PostStructure(Delegate method, DtoGeneric data)
+    {
+        _logger.Log($"received successfully from Generics {data.ToJson()}");
+        return method.DynamicInvoke();
     }
 }

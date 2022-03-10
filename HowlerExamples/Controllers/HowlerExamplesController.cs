@@ -58,5 +58,14 @@ namespace HowlerExamples.Controllers
             _logger.Clear();
             return Ok(result);
         }
+
+        [HttpPost]
+        public IActionResult PostDataHowlerGeneric([FromBody] DtoGeneric dto)
+        {
+            _serviceUsingHowler.PostDataGenerics(dto);
+            var result = string.Join("\n", _logger.GetLogs());
+            _logger.Clear();
+            return Ok(result);
+        }
     }
 }
