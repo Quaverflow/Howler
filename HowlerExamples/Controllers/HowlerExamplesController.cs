@@ -1,4 +1,5 @@
 using HowlerExamples.CrossCuttingConcerns;
+using HowlerExamples.Helpers;
 using HowlerExamples.Models;
 using HowlerExamples.Services;
 using HowlerExamples.Structures;
@@ -52,8 +53,8 @@ namespace HowlerExamples.Controllers
         [HttpPost]
         public IActionResult PostDataHowler([FromBody] Dto dto)
         {
-            var data = _serviceUsingHowler.PostData(dto);
-            var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
+            _serviceUsingHowler.PostData(dto);
+            var result = string.Join("\n", _logger.GetLogs());
             _logger.Clear();
             return Ok(result);
         }

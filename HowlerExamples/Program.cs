@@ -14,13 +14,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddScoped<HttpStructures>();
+builder.Services.AddScoped<HttpStructureContainer>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
 builder.Services.AddScoped<IAuthProvider, AuthProvider>();
 builder.Services.AddScoped<IServiceUsingHowler, ServiceUsingHowler>();
 builder.Services.AddScoped<INormalService, NormalService>();
-builder.Services.AddScoped<IHttpStructureContainer, HttpStructureContainer>();
+builder.Services.AddScoped<IHttpStructure, HttpStructure>();
 builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
 
 

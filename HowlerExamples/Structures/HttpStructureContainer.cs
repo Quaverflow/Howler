@@ -1,57 +1,21 @@
-﻿using HowlerExamples.CrossCuttingConcerns;
-using HowlerExamples.Services;
-using Microsoft.AspNetCore.Http.Extensions;
+﻿using Howler;
+using HowlerExamples.Models;
 
 namespace HowlerExamples.Structures;
 
-public class HttpStructureContainer : IHttpStructureContainer
+public class HttpStructureContainer : IHowlerStructureBuilder
 {
-    private readonly IFakeLogger _logger;
-    private readonly IHttpContextAccessor _accessor;
-    private readonly IAuthProvider _authProvider;
+    private readonly IHttpStructure _httpStructureContainer;
 
-    public HttpStructureContainer(IFakeLogger logger, IHttpContextAccessor accessor, IAuthProvider authProvider)
+
+    public HttpStructureContainer(IServiceProvider provider)
     {
-        _logger = logger;
-        _accessor = accessor;
-        _authProvider = authProvider;
+        _httpStructureContainer = provider.GetRequiredService<IHttpStructure>();
     }
 
-    public object? GetStructure(Delegate method)
+    public void InvokeRegistrations()
     {
-        _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} has started");
-        try
-        {
-            _authProvider.HasAccess(true);
-
-            var result = method.DynamicInvoke();
-
-            _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} succeeded");
-            return result;
-        }
-        catch (Exception e)
-        {
-            _logger.Log($"The service  call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
-            throw;
-        };
-    }
-
-    public object? PostStructure(Delegate method)
-    {
-        _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} has started");
-        try
-        {
-            _authProvider.HasAccess(true);
-
-            var result = method.DynamicInvoke();
-
-            _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} succeeded");
-            return result;
-        }
-        catch (Exception e)
-        {
-            _logger.Log($"The service  call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
-            throw;
-        };
+        HowlerRegistration.AddStructure(StructuresIds.GetStructureId, method => _httpStructureContainer.GetStructure(method));
+        HowlerRegistration.AddStructure(StructuresIds.PostStructureId, (method, data) => _httpStructureContainer.PostStructure(method, data));
     }
 }

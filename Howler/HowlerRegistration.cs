@@ -3,6 +3,7 @@ namespace Howler;
 public static class HowlerRegistration
 {
     internal static Dictionary<Guid, Func<Delegate, object?>> Structures = new();
+    internal static Dictionary<Guid, Func<Delegate, IHowlerData, object?>> StructuresWithData = new();
     internal static bool ServicesRegistered;
 
     /// <summary>
@@ -13,7 +14,7 @@ public static class HowlerRegistration
     {
         foreach (var (id, func) in structures)
         {
-            Structures.TryAdd(id, func);
+            Structures.Add(id, func);
         }
     }
 
@@ -22,9 +23,15 @@ public static class HowlerRegistration
     /// </summary>
     /// <param name="func"></param>
     /// <param name="id"></param>
-    public static void AddStructure(Guid id, Func<Delegate, object?> func) => Structures.TryAdd(id, func);
+    public static void AddStructure(Guid id, Func<Delegate, object?> func) => Structures.Add(id, func);
+    public static void AddStructure(Guid id, Func<Delegate, IHowlerData, object?> func) => StructuresWithData.Add(id, func);
 
     public static void RemoveStructure(Guid id) => Structures.Remove(id);
 
     public static void UpdateStructure(Guid id, Func<Delegate, object?> func) => Structures[id] = func;
+}
+
+public interface IHowlerData
+{
+
 }

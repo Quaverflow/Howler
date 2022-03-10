@@ -1,6 +1,8 @@
-﻿namespace HowlerExamples.Models;
+﻿using Howler;
 
-public class Dto
+namespace HowlerExamples.Models;
+
+public class Dto : IHowlerData
 {
     public string Name { get; set; }
     public string Surname { get; set; }
