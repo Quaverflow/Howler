@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using HowlerExamples.Models;
 
-namespace HowlerExamples.Structures;
+namespace HowlerExamples.Validators;
 
 public class Validator : AbstractValidator<Dto>
 {

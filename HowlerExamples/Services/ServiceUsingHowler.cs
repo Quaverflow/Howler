@@ -1,5 +1,4 @@
 ﻿using Howler;
-using Howler.Tests.Objects.StructureExamples;
 using HowlerExamples.Models;
 using HowlerExamples.Structures;
 

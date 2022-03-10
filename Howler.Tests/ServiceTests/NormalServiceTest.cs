@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using MonkeyPatcher.MonkeyPatch.Interfaces;
 using System.Collections.Generic;
+using HowlerExamples.CrossCuttingConcerns;
 using Xunit;
 
 namespace Howler.Tests.ServiceTests;

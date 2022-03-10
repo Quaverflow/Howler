@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Howler.Tests.Objects.StructureExamples;
+﻿namespace HowlerExamples.Structures;
 
 public static class StructuresIds
 {

@@ -1,3 +1,4 @@
+using HowlerExamples.CrossCuttingConcerns;
 using HowlerExamples.Models;
 using HowlerExamples.Services;
 using HowlerExamples.Structures;

@@ -1,6 +1,6 @@
 ﻿using Utilities;
 
-namespace HowlerExamples.Services;
+namespace HowlerExamples.CrossCuttingConcerns;
 
 public class AuthProvider : IAuthProvider
 {

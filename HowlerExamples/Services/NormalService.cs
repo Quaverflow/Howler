@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using HowlerExamples.CrossCuttingConcerns;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace HowlerExamples.Services;
 

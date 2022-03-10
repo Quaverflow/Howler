@@ -1,5 +1,6 @@
 using System.Reflection;
 using Howler;
+using HowlerExamples.CrossCuttingConcerns;
 using HowlerExamples.Services;
 using HowlerExamples.Structures;
 

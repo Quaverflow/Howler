@@ -1,4 +1,4 @@
-﻿namespace HowlerExamples.Services;
+﻿namespace HowlerExamples.CrossCuttingConcerns;
 
 public class FakeLogger : IFakeLogger
 {
