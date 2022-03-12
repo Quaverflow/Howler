@@ -48,8 +48,7 @@ public class HowlerServiceTests
 
     public HowlerServiceTests()
     {
-        var howler = new InTestHowler();
-        _service = new ServiceUsingHowler(howler);
+        _service = new ServiceUsingHowler();
     }
 
     [Fact]

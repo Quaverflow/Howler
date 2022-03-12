@@ -16,7 +16,6 @@ public class HttpStructureContainer : IHowlerStructureBuilder
     public void InvokeRegistrations()
     {
         HowlerRegistration.AddStructure(StructuresIds.GetStructureId, method => _httpStructureContainer.GetStructure(method));
-        HowlerRegistration.AddStructure(StructuresIds.PostStructureId, (method, data) => _httpStructureContainer.PostStructure(method, data));
-        HowlerRegistration<DtoGeneric>.AddStructure(StructuresIds.PostStructureOfTId, (method, data) => _httpStructureContainer.PostStructure(method, data));
+        HowlerRegistration<Dto>.AddStructure(StructuresIds.PostStructureId, (method, data) => _httpStructureContainer.PostStructure(method, data));
     }
 }

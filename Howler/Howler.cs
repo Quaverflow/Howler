@@ -4,7 +4,7 @@ public class Howler : IHowler
 {
     public TResult Invoke<TResult>(Func<TResult> original) => original.Invoke();
 
-    public TResult Invoke<TResult>(Func<TResult> original, Guid id)
+    public TResult? Invoke<TResult>(Func<TResult> original, Guid id)
     {
         if (HowlerRegistration.Structures.TryGetValue(id, out var func))
         {
@@ -15,23 +15,13 @@ public class Howler : IHowler
         throw new InvalidOperationException($"The requested structure was not found for id: {id}");
     }
 
-    public TResult Invoke<TResult>(Func<TResult> original, Guid id, object data)
-    {
-        if (HowlerRegistration.StructuresWithHowlerData.TryGetValue(id, out var func))
-        {
-            var result = func.Invoke(original, data);
-            return result != null ? (TResult)result : default;
-        }
-
-        throw new InvalidOperationException($"The requested structure was not found for id: {id}");
-    }
-
-    public TResult InvokeGeneric<TData, TResult>(Func<TResult> original, Guid id, TData data)
+    public TResult? Invoke<TData, TResult>(Func<TResult> original, Guid id, TData data)
     {
         if (HowlerRegistration<TData>.Structures.TryGetValue(id, out var func))
         {
             var result = func.Invoke(original, data);
             return result != null ? (TResult)result : default;
+
         }
 
         throw new InvalidOperationException($"The requested structure was not found for id: {id}");
@@ -52,9 +42,4 @@ public class Howler : IHowler
 
         throw new InvalidOperationException($"The requested structure was not found for id: {id}");
     }
-}
-
-public class Transmitter
-{
-
 }
