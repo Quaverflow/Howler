@@ -18,7 +18,10 @@ public class ServiceUsingHowler : IServiceUsingHowler
     public void PostData(Dto dto) => dto.ToJson();
     public void PostDataAndNotify(DtoNotifiable dto)
     {
-        _howler.InvokeVoid(new EmailDto(dto.Email, "This is how you send an email with Je ne sais quoi!", "Sending notifications"), StructuresIds.SendEmailId);
-        _howler.InvokeVoid(new SmsDto(dto.PhoneNumber, "This is how you send a text with aplomb!"), StructuresIds.SendSmsId);
+
+        // do operations with the dto.
+
+        _howler.InvokeVoid(new EmailDto(dto.Email, "This is how you send an email with Je ne sais quoi!", "Sending notifications"), StructuresIds.SendEmail);
+        _howler.InvokeVoid(new SmsDto(dto.PhoneNumber, "This is how you send a text with aplomb!"), StructuresIds.SendSms);
     }
 }

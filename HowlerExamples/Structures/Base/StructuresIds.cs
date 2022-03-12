@@ -2,10 +2,9 @@
 
 public static class StructuresIds
 {
-    public static readonly Guid GetStructureId = Guid.NewGuid();
-    public static readonly Guid PostStructureId = Guid.NewGuid();
-    public static readonly Guid PostAndNotifyStructureId = Guid.NewGuid();
-    public static readonly Guid SendSmsId = Guid.NewGuid();
-    public static readonly Guid SendEmailId = Guid.NewGuid();
-    public static readonly Guid SendEmailAndSmsId = Guid.NewGuid();
+    public static readonly Guid Get = Guid.NewGuid();
+    public static readonly Guid Post = Guid.NewGuid();
+    public static readonly Guid PostAndNotify = Guid.NewGuid();
+    public static readonly Guid SendSms = Guid.NewGuid();
+    public static readonly Guid SendEmail = Guid.NewGuid();
 }
