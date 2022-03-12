@@ -1,5 +1,4 @@
 ﻿using HowlerExamples.Models;
-using HowlerExamples.Structures;
 
 namespace HowlerExamples.Services;
 
