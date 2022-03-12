@@ -1,14 +1,14 @@
 ﻿using Howler;
 using HowlerExamples.Models;
 
-namespace HowlerExamples.Structures;
+namespace HowlerExamples.Structures.Base;
 
-public class HttpStructureContainer : IHowlerStructureBuilder
+public class StructureContainer : IHowlerStructureBuilder
 {
     private readonly IHttpStructure _httpStructureContainer;
 
 
-    public HttpStructureContainer(IServiceProvider provider)
+    public StructureContainer(IServiceProvider provider)
     {
         _httpStructureContainer = provider.GetRequiredService<IHttpStructure>();
     }
@@ -17,5 +17,6 @@ public class HttpStructureContainer : IHowlerStructureBuilder
     {
         HowlerRegistration.AddStructure(StructuresIds.GetStructureId, method => _httpStructureContainer.GetStructure(method));
         HowlerRegistration<Dto>.AddStructure(StructuresIds.PostStructureId, (method, data) => _httpStructureContainer.PostStructure(method, data));
+        HowlerRegistration<object>.AddStructure(StructuresIds.PostStructureId, (method, data) => _httpStructureContainer.PostStructure(method, data));
     }
 }

@@ -59,7 +59,7 @@ public class HttpStructure : IHttpStructure
             throw;
         };
     }
-    public object? PostStructure(Delegate method, DtoGeneric data)
+    public object? PostStructure(Delegate method, DtoNotifiable data)
     {
         _logger.Log($"received successfully from Generics {data.ToJson()}");
         return method.DynamicInvoke();

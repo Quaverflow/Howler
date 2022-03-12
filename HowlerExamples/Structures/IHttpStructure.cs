@@ -7,5 +7,5 @@ public interface IHttpStructure
 {
     object? GetStructure(Delegate method);
     object? PostStructure(Delegate method, object data);
-    object? PostStructure(Delegate method, DtoGeneric data);
+    object? PostStructure(Delegate method, DtoNotifiable data);
 }

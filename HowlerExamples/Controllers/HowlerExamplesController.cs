@@ -4,6 +4,7 @@ using HowlerExamples.Helpers;
 using HowlerExamples.Models;
 using HowlerExamples.Services;
 using HowlerExamples.Structures;
+using HowlerExamples.Structures.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HowlerExamples.Controllers
@@ -29,8 +30,8 @@ namespace HowlerExamples.Controllers
         public IActionResult GetDataNormal()
         {
             var data = _normalService.GetData();
-            var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
-            _logger.Clear();
+            var result = $"{data}\n{string.Join("\n", FakesRepository.Logs)}";
+            FakesRepository.Logs.Clear();
             return Ok(result);
         }     
         
@@ -38,8 +39,8 @@ namespace HowlerExamples.Controllers
         public IActionResult GetDataHowler()
         {
             var data = _howler.Invoke(()=> _serviceUsingHowler.GetData(), StructuresIds.GetStructureId);
-            var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
-            _logger.Clear();
+            var result = $"{data}\n{string.Join("\n", FakesRepository.Logs)}";
+            FakesRepository.Logs.Clear();
             return Ok(result);
         }       
 
@@ -47,8 +48,8 @@ namespace HowlerExamples.Controllers
         public IActionResult GetMoreDataHowler()
         {
             var data = _howler.Invoke(()=> _serviceUsingHowler.GetMoreData(), StructuresIds.GetStructureId);
-            var result = $"{data}\n{string.Join("\n", _logger.GetLogs())}";
-            _logger.Clear();
+            var result = $"{data}\n{string.Join("\n", FakesRepository.Logs)}";
+            FakesRepository.Logs.Clear();
             return Ok(result);
         }
 
@@ -56,19 +57,19 @@ namespace HowlerExamples.Controllers
         [HttpPost]
         public IActionResult PostDataHowler([FromBody] Dto dto)
         {
-           _howler.Invoke(()=> _serviceUsingHowler.PostData(dto), StructuresIds.PostStructureId, dto);
-            var result = string.Join("\n", _logger.GetLogs());
-            _logger.Clear();
+           _howler.InvokeVoid(()=> _serviceUsingHowler.PostData(dto), StructuresIds.PostStructureId, dto);
+            var result = string.Join("\n", FakesRepository.Logs);
+            FakesRepository.Logs.Clear();
             return Ok(result);
         }
 
         [HttpPost]
         [Obsolete]
-        public IActionResult PostDataHowlerGeneric([FromBody] DtoGeneric dto)
+        public IActionResult PostDataHowlerAndNotify([FromBody] DtoNotifiable dto)
         {
-           _howler.Invoke(()=> _serviceUsingHowler.PostDataGenerics(dto), StructuresIds.PostStructureId, dto);
-            var result = string.Join("\n", _logger.GetLogs());
-            _logger.Clear();
+           _howler.InvokeVoid(()=> _serviceUsingHowler.PostDataAndNotify(dto), StructuresIds.PostAndNotifyStructureId, dto);
+            var result = string.Join("\n",FakesRepository.Logs);
+            FakesRepository.Logs.Clear();
             return Ok(result);
         }
     }

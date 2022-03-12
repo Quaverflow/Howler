@@ -3,6 +3,7 @@ using Howler;
 using HowlerExamples.CrossCuttingConcerns;
 using HowlerExamples.Services;
 using HowlerExamples.Structures;
+using HowlerExamples.Structures.Base;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddScoped<HttpStructureContainer>();
+builder.Services.AddScoped<StructureContainer>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
 builder.Services.AddScoped<IAuthProvider, AuthProvider>();

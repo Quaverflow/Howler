@@ -6,18 +6,6 @@ using Utilities.ExtensionMethods;
 
 namespace Howler;
 
-internal class InTestRegistrationRecord
-{
-    public InTestRegistrationRecord(string key, Delegate substitute)
-    {
-        Key = key;
-        Substitute = substitute;
-    }
-
-    public string Key { get; }
-    public Delegate Substitute { get; }
-}
-
 public partial class InTestHowler : IHowler
 {
     private readonly Dictionary<string, Delegate> _records = new();
@@ -61,6 +49,21 @@ public partial class InTestHowler : IHowler
     }
 
     public TResult Invoke<TData, TResult>(Func<TResult> original, Guid id, TData data) => original.Invoke();
+    public void InvokeVoid(Action original)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void InvokeVoid(Action original, Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void InvokeVoid<TData>(Action original, Guid id, TData data)
+    {
+        throw new NotImplementedException();
+    }
+
     public void InvokeVoid(Action original, Guid? id = null) => original.Invoke();
 }
 

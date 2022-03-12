@@ -7,6 +7,6 @@ public interface IServiceUsingHowler
 {
     string GetData();
     string GetMoreData();
-    string PostData(Dto dto);
-    string PostDataGenerics(DtoGeneric dto);
+    void PostData(Dto dto);
+    void PostDataAndNotify(DtoNotifiable dto);
 }
