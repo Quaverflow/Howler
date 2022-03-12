@@ -98,8 +98,12 @@ namespace Howler.Tests
         {
             var howler = new InTestHowler();
             howler.Register(() => ExampleStaticClass.ReturnLength("hello"), () => 35);
-            var x = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"));
-            Assert.Equal(35, x);
+            var res1 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"));
+            Assert.Equal(35, res1);
+            
+            howler.Register(() => ExampleStaticClass.ReturnLength("hello"), () => 3);
+            var res2 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"));
+            Assert.Equal(3, res2);
         }
 
         [Fact]

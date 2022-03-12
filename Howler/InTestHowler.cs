@@ -26,7 +26,14 @@ public class InTestHowler : IHowler
         if (original.Body is MethodCallExpression method)
         {
             var key = method.Method.GetKey() + structureId;
-            _records.Add(key, substitute);
+            if (_records.ContainsKey(key))
+            {
+                _records[key] = substitute;
+            }
+            else
+            {
+                _records.Add(key, substitute);
+            }
         }
     }
 
