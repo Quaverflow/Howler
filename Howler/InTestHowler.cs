@@ -24,7 +24,44 @@ public class InTestHowler : IHowler
     public void Register<TResult>(Expression<Func<TResult>> original, Func<TResult> substitute, Guid? structureId = null)
         => RegisterInternal(original, substitute, structureId);
 
-    public void Register<TResult, TData>(Expression<Func<TResult>> original, Func<TData, TResult> substitute, Guid structureId)
+    public void Register<TResult, T>
+        (Expression<Func<TResult>> original, Func<T, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2>
+        (Expression<Func<TResult>> original, Func<T1, T2, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2, T3>
+        (Expression<Func<TResult>> original, Func<T1, T2, T3, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2, T3, T4>
+        (Expression<Func<TResult>> original, Func<T1, T2, T3, T4, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2, T3, T4, T5>
+        (Expression<Func<TResult>> original, Func<T1, T2, T3, T4, T5, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2, T3, T4, T5,T6>
+        (Expression<Func<TResult>> original, Func<T1, T2, T3, T4, T5, T6, TResult> substitute, Guid structureId)
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2, T3, T4, T5, T6, T7>
+        (Expression<Func<TResult>> original, Func<T1, T2, T3, T4, T5, T6, T7, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2, T3, T4, T5, T6, T7, T8>
+        (Expression<Func<TResult>> original, Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2, T3, T4, T5, T6, T7, T8, T9>
+        (Expression<Func<TResult>> original, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>
+        (Expression<Func<TResult>> original, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> substitute, Guid structureId) 
         => RegisterInternal(original, substitute, structureId);
 
     private void RegisterInternal<TResult>(Expression<Func<TResult>> original, Delegate substitute, Guid? structureId = null)
@@ -47,23 +84,17 @@ public class InTestHowler : IHowler
 
     public TResult Invoke<TResult>(Func<TResult> original)
     {
-
         var expr = original.Decompile();
         if (expr.Body is MethodCallExpression method)
         {
             var key = method.Method.GetKey();
             if (_records.TryGetValue(key, out var sub))
             {
-                if (sub is Func<TResult> substitute1)
-                {
-                    substitute1.ThrowIfNull();
-                    return substitute1.Invoke();
-                }
-
-                return (TResult)sub.DynamicInvoke(expr.Parameters);
+                var substitute = sub as Func<TResult>;
+                substitute.ThrowIfNull();
+                return substitute.Invoke();
             }
         }
-
         return original.Invoke();
     }
 

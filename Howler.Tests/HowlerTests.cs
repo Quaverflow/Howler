@@ -97,17 +97,23 @@ namespace Howler.Tests
         public void TestReturns()
         {
             var howler = new InTestHowler();
-            howler.Register(() => ExampleStaticClass.ReturnLength("hello"), () => 35);
+            howler.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 35);
             var res1 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"));
             Assert.Equal(35, res1);
             
-            howler.Register(() => ExampleStaticClass.ReturnLength("hello"), () => 3);
+            howler.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 3);
             var res2 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"));
             Assert.Equal(3, res2); 
 
-            howler.Register<int, string>(() => ExampleStaticClass.ReturnLength("hello"), x => x.Length + 3,Guid.Empty);
+            howler.Register<int, string>(() => ExampleStaticClass.ReturnLength(A<string>.Value), x => x.Length + 3,Guid.Empty);
             var res23 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"), Guid.Empty);
-            Assert.Equal(8, res23);
+            Assert.Equal(8, res23);   
+            
+            howler.Register<int, string, int>(() => 
+                ExampleStaticClass.ReturnLength(A<string>.Value, A<int>.Value), (x, y) => x.Length + y + 3,Guid.Empty);
+
+            var res223 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello", 10), Guid.Empty);
+            Assert.Equal(18, res223);
         }
 
         [Fact]
