@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Howler.Tests.Objects;
 using Howler.Tests.Objects.ExampleObjects;
 using Howler.Tests.Objects.StructureExamples;
 using Xunit;

@@ -2,12 +2,17 @@ namespace Howler;
 
 public class Howler : IHowler
 {
-    private static object? InternalInvoke(Delegate original, Guid id, object? data = null)
+    private static object? InternalInvoke(Delegate? original, Guid id, object? data = null)
     {
         if (HowlerRegistration.Registrations.TryGetValue(id, out var structure))
         {
             try
             {
+                if (original == null)
+                {
+                    return structure.DynamicInvoke(data);
+                }
+
                 return data != null
                     ? structure.DynamicInvoke(original, data)
                     : structure.DynamicInvoke(original);
@@ -45,4 +50,12 @@ public class Howler : IHowler
     public void InvokeVoid(Action original, Guid id) => InternalInvoke(original, id);
 
     public void InvokeVoid<TData>(Action original, Guid id, TData data) => InternalInvoke(original, id, data);
+
+    public void InvokeVoid<T>(T data, Guid id) => InternalInvoke(null, id, data);
+
+    public TResult? Invoke<T, TResult>(T data, Guid id)
+    {
+        var result = InternalInvoke(null, id, data);
+        return result == null ? default : (TResult)result;
+    }
 }

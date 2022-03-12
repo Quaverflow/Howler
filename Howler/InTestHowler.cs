@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Linq.Expressions;
 using DelegateDecompiler;
 using Utilities;
@@ -9,7 +8,17 @@ namespace Howler;
 public partial class InTestHowler : IHowler
 {
     private readonly Dictionary<string, Delegate> _records = new();
-   
+
+    public void InvokeVoid<T>(T data, Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public TResult? Invoke<T, TResult>(T data, Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
     public TResult Invoke<TResult>(Func<TResult> original)
     {
         var expr = original.Decompile();
@@ -64,7 +73,6 @@ public partial class InTestHowler : IHowler
         throw new NotImplementedException();
     }
 
-    public void InvokeVoid(Action original, Guid? id = null) => original.Invoke();
 }
 
 

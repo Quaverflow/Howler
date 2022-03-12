@@ -22,6 +22,7 @@ builder.Services.AddScoped<IAuthProvider, AuthProvider>();
 builder.Services.AddScoped<IServiceUsingHowler, ServiceUsingHowler>();
 builder.Services.AddScoped<INormalService, NormalService>();
 builder.Services.AddScoped<IHttpStructure, HttpStructure>();
+builder.Services.AddScoped<INotificationStructure, NotificationStructure>();
 builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
 
 

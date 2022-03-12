@@ -1,9 +1,7 @@
-﻿using Howler;
-using HowlerExamples.CrossCuttingConcerns;
+﻿using HowlerExamples.CrossCuttingConcerns;
 using HowlerExamples.Helpers;
 using HowlerExamples.Models;
 using Microsoft.AspNetCore.Http.Extensions;
-using Utilities;
 
 namespace HowlerExamples.Structures;
 
@@ -61,7 +59,7 @@ public class HttpStructure : IHttpStructure
     }
     public object? PostStructure(Delegate method, DtoNotifiable data)
     {
-        _logger.Log($"received successfully from Generics {data.ToJson()}");
+        _logger.Log($"received successfully {data.ToJson()}");
         return method.DynamicInvoke();
     }
 }

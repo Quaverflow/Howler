@@ -9,7 +9,8 @@ public class HowlerServiceTests
 
     public HowlerServiceTests()
     {
-        _service = new ServiceUsingHowler();
+        var howler = new InTestHowler();
+        _service = new ServiceUsingHowler(howler);
     }
 
     [Fact]

@@ -1,5 +1,4 @@
 ﻿using HowlerExamples.Helpers;
-using HowlerExamples.Structures;
 
 namespace HowlerExamples.CrossCuttingConcerns;
 

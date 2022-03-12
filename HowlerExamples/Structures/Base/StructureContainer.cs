@@ -19,7 +19,7 @@ public class StructureContainer : IHowlerStructureBuilder
     {
         HowlerRegistration.AddStructure(StructuresIds.GetStructureId, method => _httpStructureContainer.GetStructure(method));
         HowlerRegistration.AddStructure<Dto>(StructuresIds.PostStructureId, (method, data) => _httpStructureContainer.PostStructure(method, data));
-        HowlerRegistration.AddStructure<object>(StructuresIds.PostStructureId, (method, data) => _httpStructureContainer.PostStructure(method, data));
+        HowlerRegistration.AddStructure<DtoNotifiable>(StructuresIds.PostAndNotifyStructureId, (method, data) => _httpStructureContainer.PostStructure(method, data));
         HowlerRegistration.AddDataTransferVoidStructure<EmailDto>(StructuresIds.SendEmailId, data => _notificationStructure.SendEmail(data));
         HowlerRegistration.AddDataTransferVoidStructure<SmsDto>(StructuresIds.SendSmsId, data => _notificationStructure.SendSms(data));
         HowlerRegistration.AddDataTransferVoidStructure<NotificationDto>(StructuresIds.SendEmailAndSmsId, data => _notificationStructure.SendNotification(data));
