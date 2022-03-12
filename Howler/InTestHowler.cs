@@ -21,10 +21,10 @@ internal class InTestRegistrationRecord
 public class InTestHowler : IHowler
 {
     private readonly Dictionary<string, Delegate> _records = new();
-    public void Register<TResult>(Expression<Func<TResult>> original, Func<TResult> substitute, Guid? structureId = null) 
+    public void Register<TResult>(Expression<Func<TResult>> original, Func<TResult> substitute, Guid? structureId = null)
         => RegisterInternal(original, substitute, structureId);
 
-    public void Register<TResult, TData>(Expression<Func<TResult>> original, Func<TData, TResult> substitute, Guid structureId) 
+    public void Register<TResult, TData>(Expression<Func<TResult>> original, Func<TData, TResult> substitute, Guid structureId)
         => RegisterInternal(original, substitute, structureId);
 
     private void RegisterInternal<TResult>(Expression<Func<TResult>> original, Delegate substitute, Guid? structureId = null)
@@ -52,19 +52,43 @@ public class InTestHowler : IHowler
         if (expr.Body is MethodCallExpression method)
         {
             var key = method.Method.GetKey();
-            if(_records.TryGetValue(key, out var sub))
+            if (_records.TryGetValue(key, out var sub))
             {
-                var substitute = sub as Func<TResult>;
-                substitute.ThrowIfNull();
+                if (sub is Func<TResult> substitute1)
+                {
+                    substitute1.ThrowIfNull();
+                    return substitute1.Invoke();
+                }
 
-                return substitute.Invoke();
+                return (TResult)sub.DynamicInvoke(expr.Parameters);
             }
         }
 
         return original.Invoke();
     }
 
-    public TResult Invoke<TResult>(Func<TResult> original, Guid id) => original.Invoke();
+    public TResult Invoke<TResult>(Func<TResult> original, Guid id)
+    {
+        var expr = original.Decompile();
+        if (expr.Body is MethodCallExpression method)
+        {
+            var key = method.Method.GetKey() + id;
+            if (_records.TryGetValue(key, out var sub))
+            {
+                if (sub is Func<TResult> substitute1)
+                {
+                    substitute1.ThrowIfNull();
+                    return substitute1.Invoke();
+                }
+
+                var args = method.Arguments.Select(x => ((ConstantExpression)x).Value).ToArray();
+                return (TResult)sub.DynamicInvoke(args);
+            }
+        }
+
+        return original.Invoke();
+    }
+
     public TResult InvokeGeneric<TData, TResult>(Func<TResult> original, Guid id, TData data) => original.Invoke();
     public TResult Invoke<TResult>(Func<TResult> original, Guid id, object data) => original.Invoke();
     public void InvokeVoid(Action original, Guid? id = null) => original.Invoke();
