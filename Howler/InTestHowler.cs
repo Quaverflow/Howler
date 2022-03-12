@@ -21,7 +21,13 @@ internal class InTestRegistrationRecord
 public class InTestHowler : IHowler
 {
     private readonly Dictionary<string, Delegate> _records = new();
-    public void Register<TResult>(Expression<Func<TResult>> original, Func<TResult> substitute, Guid? structureId = null)
+    public void Register<TResult>(Expression<Func<TResult>> original, Func<TResult> substitute, Guid? structureId = null) 
+        => RegisterInternal(original, substitute, structureId);
+
+    public void Register<TResult, TData>(Expression<Func<TResult>> original, Func<TData, TResult> substitute, Guid structureId) 
+        => RegisterInternal(original, substitute, structureId);
+
+    private void RegisterInternal<TResult>(Expression<Func<TResult>> original, Delegate substitute, Guid? structureId = null)
     {
         if (original.Body is MethodCallExpression method)
         {
@@ -36,7 +42,6 @@ public class InTestHowler : IHowler
             }
         }
     }
-
 
 
 
