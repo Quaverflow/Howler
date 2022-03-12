@@ -88,8 +88,23 @@ namespace Howler.Tests
         [Fact]
         public async Task TestReturnsAsyncTask()
         {
-            var howler = new Howler();
+            var howler = new InTestHowler();
             await howler.Invoke(ExampleStaticClass.ReturnAsync);
+            Assert.True(ExampleStaticClass.Check);
+        }
+       [Fact]
+        public async Task TestReturns()
+        {
+            var howler = new InTestHowler();
+            howler.Register(()=> ExampleStaticClass.ReturnLength("hello"), ()=> 35);
+            var x = howler.Invoke(()=> ExampleStaticClass.ReturnLength("hello"));
+            Assert.Equal(35, x);
+        }       
+        [Fact]
+        public async Task TestConstReturns()
+        {
+            var howler = new InTestHowler();
+            var x = howler.Invoke(()=> "hello my baby" + "don't fall!");
             Assert.True(ExampleStaticClass.Check);
         }
 

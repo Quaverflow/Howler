@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howler", "Howler\Howler.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howler.Tests", "Howler.Tests\Howler.Tests.csproj", "{E118D786-703C-46ED-A263-8EC886D8FB6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HowlerExamples", "HowlerExamples\HowlerExamples.csproj", "{D50ECCCD-7AF3-4AE0-AA2C-412BA3F8E10B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HowlerExamples", "HowlerExamples\HowlerExamples.csproj", "{D50ECCCD-7AF3-4AE0-AA2C-412BA3F8E10B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
