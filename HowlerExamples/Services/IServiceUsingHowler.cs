@@ -7,5 +7,5 @@ public interface IServiceUsingHowler
     string GetData();
     string GetMoreData();
     void PostData(Dto dto);
-    void PostDataAndNotify(DtoNotifiable dto);
+    Task<string> PostDataAndNotify(DtoNotifiable dto);
 }

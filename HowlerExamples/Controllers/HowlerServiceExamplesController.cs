@@ -51,13 +51,14 @@ public class HowlerServiceExamplesController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult PostDataHowlerAndNotify([FromBody] DtoNotifiable dto)
+    public async Task<IActionResult> PostDataHowlerAndNotify([FromBody] DtoNotifiable dto)
     {
-        _howler.InvokeVoid(() => _serviceUsingHowler.PostDataAndNotify(dto), StructuresIds.PostAndNotify, dto);
+        var savedEntity = await _howler.Invoke(async () => await _serviceUsingHowler.PostDataAndNotify(dto), StructuresIds.PostAndNotify, dto);
 
         var result = string.Join("\n", FakesRepository.Logs);
         result += "\n" + string.Join("\n", FakesRepository.EmailsSent);
         result +=" \n" +  string.Join("\n", FakesRepository.SmsSent);
+        result += $"\nsaved entity: {savedEntity}";
         FakesRepository.Logs.Clear();
         FakesRepository.EmailsSent.Clear();
         FakesRepository.SmsSent.Clear();

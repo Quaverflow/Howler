@@ -3,6 +3,7 @@ using Howler;
 using HowlerExamples.CrossCuttingConcerns;
 using HowlerExamples.Database;
 using HowlerExamples.Services;
+using HowlerExamples.Services.Repositories;
 using HowlerExamples.Structures;
 using HowlerExamples.Structures.Base;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,8 @@ builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
 
 // Cross cutting concerns
 builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
+builder.Services.AddSingleton<IFakeSmsSender, FakeSmsSender>();
+builder.Services.AddSingleton<IFakeEmailSender, FakeEmailSender>();
 builder.Services.AddScoped<IAuthProvider, AuthProvider>();
 
 // Infrastructure
@@ -25,10 +28,16 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ExampleDbContext>(options => options.UseInMemoryDatabase("FakeContext"));
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 // Services
 builder.Services.AddScoped<IServiceUsingHowler, ServiceUsingHowler>();
 builder.Services.AddScoped<INormalService, NormalService>();
+
+// Repositories
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+
 
 var app = builder.Build();
 

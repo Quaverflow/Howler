@@ -14,7 +14,7 @@ public partial class InTestHowler : IHowler
         throw new NotImplementedException();
     }
 
-    public TResult? Invoke<T, TResult>(T data, Guid id)
+    public TResult Invoke<T, TResult>(T data, Guid id)
     {
         throw new NotImplementedException();
     }
@@ -58,6 +58,7 @@ public partial class InTestHowler : IHowler
     }
 
     public TResult Invoke<TData, TResult>(Func<TResult> original, Guid id, TData data) => original.Invoke();
+
     public void InvokeVoid(Action original)
     {
         throw new NotImplementedException();

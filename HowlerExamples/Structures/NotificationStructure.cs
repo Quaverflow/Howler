@@ -1,12 +1,22 @@
-﻿using HowlerExamples.Helpers;
+﻿using HowlerExamples.CrossCuttingConcerns;
 using HowlerExamples.Models;
 
 namespace HowlerExamples.Structures;
 
 public class NotificationStructure: INotificationStructure
 {
-    public void SendEmail(EmailDto email) => FakesRepository.EmailsSent.Add(email);
-    public void SendSms(SmsDto sms) => FakesRepository.SmsSent.Add(sms);
+    private readonly IFakeSmsSender _smsSender;
+    private readonly IFakeEmailSender _emailSender;
+
+    public NotificationStructure(IFakeSmsSender smsSender, IFakeEmailSender emailSender)
+    {
+        _smsSender = smsSender;
+        _emailSender = emailSender;
+    }
+
+    public void SendEmail(EmailDto email) => _emailSender.Send(email);
+    public void SendSms(SmsDto sms) => _smsSender.Send(sms);
+
     public void SendNotification(NotificationDto data)
     {
         SendEmail(data.Email);

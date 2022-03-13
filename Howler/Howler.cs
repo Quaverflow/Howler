@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Howler;
 
 public class Howler : IHowler
@@ -33,13 +35,13 @@ public class Howler : IHowler
 
     public TResult Invoke<TResult>(Func<TResult> original) => original.Invoke();
 
-    public TResult? Invoke<TResult>(Func<TResult> original, Guid id)
+    public TResult Invoke<TResult>(Func<TResult> original, Guid id)
     {
         var result = InternalInvoke(original, id);
         return result == null ? default : (TResult)result;
     }
 
-    public TResult? Invoke<TData, TResult>(Func<TResult> original, Guid id, TData data)
+    public TResult Invoke<TData, TResult>(Func<TResult> original, Guid id, TData data)
     {
         var result = InternalInvoke(original, id, data);
         return result == null ? default : (TResult)result;
@@ -53,7 +55,7 @@ public class Howler : IHowler
 
     public void InvokeVoid<T>(T data, Guid id) => InternalInvoke(null, id, data);
 
-    public TResult? Invoke<T, TResult>(T data, Guid id)
+    public TResult Invoke<T, TResult>(T data, Guid id)
     {
         var result = InternalInvoke(null, id, data);
         return result == null ? default : (TResult)result;
