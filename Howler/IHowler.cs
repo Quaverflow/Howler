@@ -13,6 +13,5 @@ public interface IHowler
     void InvokeVoid(Action original);
     void InvokeVoid(Action original, Guid id);
     void InvokeVoid<TData>(Action original, Guid id, TData data);
-    Task<TResult?> InvokeAsync<T, TResult>(T data, Guid id);
 
 }
