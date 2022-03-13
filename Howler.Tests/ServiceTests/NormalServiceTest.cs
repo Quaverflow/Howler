@@ -1,13 +1,13 @@
-﻿using HowlerExamples.Services;
+﻿using AutoMapper;
+using ExamplesCore.CrossCuttingConcerns;
+using ExamplesCore.Database;
+using ExamplesCore.Services;
+using ExamplesCore.Services.Repositories;
 using Microsoft.AspNetCore.Http;
 using MonkeyPatcher.MonkeyPatch.Interfaces;
 using System.Collections.Generic;
 using System.Reflection;
-using AutoMapper;
-using HowlerExamples.CrossCuttingConcerns;
-using HowlerExamples.Database;
-using HowlerExamples.Profiles;
-using HowlerExamples.Services.Repositories;
+using ExamplesCore.Profiles;
 using Xunit;
 
 namespace Howler.Tests.ServiceTests;

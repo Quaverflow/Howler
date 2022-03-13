@@ -1,6 +1,6 @@
 namespace Howler;
 
-public abstract class HowlerStructureBuilder
+public abstract class HowlerStructureBuilder : IHowlerStructureBuilder
 {
     protected IServiceProvider Provider => Howler.Provider;
 
@@ -8,4 +8,10 @@ public abstract class HowlerStructureBuilder
     /// Call all of your registrations here. This method will be invoked by the middleware at runtime to register the structures
     /// </summary>
     public abstract void InvokeRegistrations();
+}
+
+public interface IHowlerStructureBuilder
+{
+    public void InvokeRegistrations();
+
 }

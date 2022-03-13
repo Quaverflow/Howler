@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Howler;
 
 public class Howler : IHowler
@@ -24,6 +22,34 @@ public class Howler : IHowler
                 return data != null
                     ? structure.DynamicInvoke(original, data)
                     : structure.DynamicInvoke(original);
+            }
+
+            catch (Exception ex)
+            {
+                // this is to make sure we display the real exception rather than the DynamicInvoke wrapper exception.
+                if (ex.InnerException != null)
+                {
+                    throw ex.InnerException;
+                }
+                throw;
+            }
+        }
+        throw new InvalidOperationException($"The requested structure was not found for id: {id}");
+    }
+    private static async Task<T?> InternalInvokeAsync<T>(Delegate? original, Guid id, object? data = null)
+    {
+        if (HowlerRegistration.Registrations.TryGetValue(id, out var structure))
+        {
+            try
+            {
+                if (original == null)
+                {
+                    return await (Task<T?>)structure.DynamicInvoke(data);
+                }
+
+                return await (Task<T?>)(data != null
+                    ? structure.DynamicInvoke(original, data)
+                    : structure.DynamicInvoke(original));
             }
 
             catch (Exception ex)
@@ -70,5 +96,10 @@ public class Howler : IHowler
     {
         var result = InternalInvoke(null, id, data);
         return result == null ? default : (TResult)result;
+    }
+    public async Task<TResult?> InvokeAsync<T, TResult>(T data, Guid id)
+    {
+        var result = await InternalInvokeAsync<TResult>(null, id, data);
+        return result == null ? default : result;
     }
 }

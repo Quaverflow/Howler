@@ -79,6 +79,10 @@ public partial class InTestHowler : IHowler
         throw new NotImplementedException();
     }
 
+    public Task<TResult?> InvokeAsync<T, TResult>(T data, Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 

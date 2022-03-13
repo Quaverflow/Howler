@@ -1,8 +1,8 @@
+using ExamplesCore.Helpers;
+using ExamplesCore.Models;
+using ExamplesCore.Services;
+using ExamplesCore.Structures.Base;
 using Howler;
-using HowlerExamples.Helpers;
-using HowlerExamples.Models;
-using HowlerExamples.Services;
-using HowlerExamples.Structures.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HowlerExamples.Controllers;

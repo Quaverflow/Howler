@@ -1,11 +1,10 @@
-﻿using System.Reflection;
-using AutoMapper;
-using HowlerExamples.Database;
-using HowlerExamples.Profiles;
-using HowlerExamples.Services;
-using HowlerExamples.Services.Repositories;
-using HowlerExamples.Validators;
+﻿using AutoMapper;
+using ExamplesCore.Database;
+using ExamplesCore.Services.Repositories;
 using MonkeyPatcher.MonkeyPatch.Interfaces;
+using System.Reflection;
+using ExamplesCore.Profiles;
+using ExamplesCore.Services;
 using Xunit;
 
 namespace Howler.Tests.ServiceTests;

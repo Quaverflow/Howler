@@ -1,17 +1,10 @@
-
-using ExamplesCore;
-using Howler;
-
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.RegisteredCoreServices();
-builder.RegisteredCrossCuttingConcerns();
-builder.RegisteredInfrastructures();
-builder.RegisteredRepositories();
-builder.RegisteredStructures();
+// Add services to the container.
 
-
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -23,7 +16,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.RegisterHowlerMiddleware();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

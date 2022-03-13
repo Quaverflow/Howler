@@ -1,6 +1,5 @@
-using HowlerExamples.CrossCuttingConcerns;
-using HowlerExamples.Helpers;
-using HowlerExamples.Services;
+using ExamplesCore.Helpers;
+using ExamplesCore.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HowlerExamples.Controllers

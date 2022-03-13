@@ -16,8 +16,12 @@ public static class HowlerRegistrationExtensions
     /// <returns></returns>
     public static IServiceCollection RegisterHowler(this IServiceCollection services, Assembly executingAssembly)
     {
-        var registrations = executingAssembly.GetTypes()
-            .Where(type => typeof(HowlerStructureBuilder).IsAssignableFrom(type) && !type.IsInterface).ToList();
+        var assemblies = executingAssembly.GetReferencedAssemblies().Select(Assembly.Load).ToList();
+        assemblies.Add(executingAssembly);
+
+        var types = assemblies.SelectMany(x => x.GetTypes());
+
+        var registrations = types.Where(type => typeof(IHowlerStructureBuilder).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract).ToList();
 
         foreach (var service in registrations)
         {
