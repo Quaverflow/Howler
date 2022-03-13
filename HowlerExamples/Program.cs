@@ -1,31 +1,34 @@
 using System.Reflection;
 using Howler;
 using HowlerExamples.CrossCuttingConcerns;
+using HowlerExamples.Database;
 using HowlerExamples.Services;
 using HowlerExamples.Structures;
 using HowlerExamples.Structures.Base;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-
+// Howler
 builder.Services.AddScoped<StructureContainer>();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
-builder.Services.AddScoped<IAuthProvider, AuthProvider>();
-builder.Services.AddScoped<IServiceUsingHowler, ServiceUsingHowler>();
-builder.Services.AddScoped<INormalService, NormalService>();
 builder.Services.AddScoped<IHttpStructure, HttpStructure>();
 builder.Services.AddScoped<INotificationStructure, NotificationStructure>();
 builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
 
+// Cross cutting concerns
+builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
+builder.Services.AddScoped<IAuthProvider, AuthProvider>();
 
+// Infrastructure
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<ExampleDbContext>(options => options.UseInMemoryDatabase("FakeContext"));
+builder.Services.AddHttpContextAccessor();
+
+// Services
+builder.Services.AddScoped<IServiceUsingHowler, ServiceUsingHowler>();
+builder.Services.AddScoped<INormalService, NormalService>();
 
 var app = builder.Build();
 
