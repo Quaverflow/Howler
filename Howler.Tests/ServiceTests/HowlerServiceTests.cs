@@ -1,4 +1,11 @@
-﻿using HowlerExamples.Services;
+﻿using System.Reflection;
+using AutoMapper;
+using HowlerExamples.Database;
+using HowlerExamples.Profiles;
+using HowlerExamples.Services;
+using HowlerExamples.Services.Repositories;
+using HowlerExamples.Validators;
+using MonkeyPatcher.MonkeyPatch.Interfaces;
 using Xunit;
 
 namespace Howler.Tests.ServiceTests;
@@ -10,7 +17,9 @@ public class HowlerServiceTests
     public HowlerServiceTests()
     {
         var howler = new InTestHowler();
-        _service = new ServiceUsingHowler(howler);
+        var mapper = new Mapper(new MapperConfiguration(x => x.AddMaps(Assembly.GetAssembly(typeof(PersonProfile)))));
+        var personRepository = new Proxy<IBaseRepository<Person>>();
+        _service = new ServiceUsingHowler(howler, mapper, personRepository.Instance);
     }
 
     [Fact]

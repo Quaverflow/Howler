@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using Howler.Tests.Objects.ExampleObjects;
 using Howler.Tests.Objects.StructureExamples;
@@ -18,7 +19,7 @@ namespace Howler.Tests
         [Fact]
         public void TestReturnsThroughTryCatch_Pass()
         {
-            var howler = new Howler();
+            var howler = new Howler(new ServiceContainer());
             var result = howler.Invoke(() => ExampleStaticClass.ReturnLength("hey"), StructuresIds.TryCatchStructureId);
             Assert.Equal(3, result);
         }
@@ -26,7 +27,7 @@ namespace Howler.Tests
         [Fact]
         public void TestReturnsThroughTryCatch_Fail()
         {
-            var howler = new Howler();
+            var howler = new Howler(new ServiceContainer());
             var result = Assert.Throws<InvalidOperationException>(() => howler.Invoke(() => ExampleStaticClass.ReturnLength(null), StructuresIds.TryCatchStructureId));
             Assert.StartsWith("uh-oh", result.Message);
         }
@@ -39,7 +40,7 @@ namespace Howler.Tests
         [Fact]
         public async Task TestEvent_Simple()
         {
-            var howler = new Howler();
+            var howler = new Howler(new ServiceContainer());
 
             HowlerStructures.SayHello += SayHello;
 
@@ -59,7 +60,7 @@ namespace Howler.Tests
         [Fact]
         public async Task TestEvent_AddToDb()
         {
-            var howler = new Howler();
+            var howler = new Howler(new ServiceContainer());
             HowlerStructures.AddToDb += AddHelloToDb;
 
             await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), StructuresIds.AddToDbRaisingStructureId);
@@ -78,7 +79,7 @@ namespace Howler.Tests
         [Fact]
         public void TestVoid()
         {
-            var howler = new Howler();
+            var howler = new Howler(new ServiceContainer());
             var ex = Assert.Throws<Exception>(() => howler.InvokeVoid(ExampleStaticClass.VoidLength));
             Assert.Equal("I was called!", ex.Message);
         }

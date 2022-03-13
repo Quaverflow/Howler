@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Xunit;
@@ -16,7 +17,7 @@ public class PerformanceTest
     {
         Thread.Sleep(100);
         var stopwatch = new Stopwatch();
-        var howler = new Howler();
+        var howler = new Howler(new ServiceContainer());
 
 
         stopwatch.Restart();
