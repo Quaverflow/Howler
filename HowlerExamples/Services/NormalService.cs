@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using HowlerExamples.CrossCuttingConcerns;
 using HowlerExamples.Database;
 using HowlerExamples.Helpers;
 using HowlerExamples.Models;
 using HowlerExamples.Services.Repositories;
+using HowlerExamples.Validators;
 using Microsoft.AspNetCore.Http.Extensions;
 using Utilities;
 
@@ -56,6 +58,13 @@ public class NormalService : INormalService
         try
         {
             _authProvider.HasAccess(true);
+
+            var validator = new DtoNotifiableValidator();
+            var result = await validator.ValidateAsync(dto);
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
 
             var entity = _mapper.Map<Person>(dto);
             entity = await _repository.AddAndSaveAsync(entity);

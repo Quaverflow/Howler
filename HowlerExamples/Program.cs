@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<StructureContainer>();
 builder.Services.AddScoped<IHttpStructure, HttpStructure>();
 builder.Services.AddScoped<INotificationStructure, NotificationStructure>();
+builder.Services.AddScoped<IValidationStructure, ValidationStructure>();
 builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
 
 // Cross cutting concerns

@@ -5,6 +5,8 @@ using HowlerExamples.Helpers;
 using HowlerExamples.Models;
 using HowlerExamples.Services.Repositories;
 using HowlerExamples.Structures.Base;
+using HowlerExamples.Structures.StructureDtos;
+using HowlerExamples.Validators;
 using Utilities;
 
 namespace HowlerExamples.Services;
@@ -28,6 +30,8 @@ public class ServiceUsingHowler : IServiceUsingHowler
 
     public async Task<string> PostDataAndNotify(DtoNotifiable dto)
     {
+        _howler.InvokeVoid(new ValidationStructureData<DtoNotifiable, DtoNotifiableValidator>(dto), StructuresIds.Validate);
+
         var entity = _mapper.Map<Person>(dto);
         entity = await _repository.AddAndSaveAsync(entity);
         entity.ThrowIfNull();
