@@ -90,7 +90,7 @@ public class NormalService : INormalService
 
                 _emailSender.Send(new EmailDto(dto.Email, "This is how you send an email with Je ne sais quoi!", "Sending notifications"));
                 _smsSender.Send(new SmsDto(dto.PhoneNumber, "This is how you send a text with aplomb!"));
-                return result?.Result ?? string.Empty;
+                return result?.Response ?? string.Empty;
             }
             catch (Exception e)
             {

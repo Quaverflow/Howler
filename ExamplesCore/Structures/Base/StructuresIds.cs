@@ -9,4 +9,5 @@ public static class StructuresIds
     public static readonly Guid SendEmail = Guid.NewGuid();
     public static readonly Guid Validate = Guid.NewGuid();
     public static readonly Guid NotifyMicroService = Guid.NewGuid();
+    public static readonly Guid PostToForeignService = Guid.NewGuid();
 }

@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using ExamplesCore.CrossCuttingConcerns;
+using ExamplesCore.Models;
 using ExamplesCore.Structures.StructureDtos;
+using Newtonsoft.Json;
 using Utilities;
 
 namespace ExamplesCore.Structures;
@@ -16,7 +18,7 @@ public class MicroServiceCommunicationStructure : IMicroServiceCommunicationStru
         _logger = logger;
     }
 
-    public async Task<HttpResponseMessage> SendToMicroService(MicroServiceCommunicationStructureData data)
+    public async Task<MicroServiceResult?> SendToMicroService(MicroServiceCommunicationStructureData data)
     {
         try
         {
@@ -36,13 +38,13 @@ public class MicroServiceCommunicationStructure : IMicroServiceCommunicationStru
             result.EnsureSuccessStatusCode();
             _logger.Log("MicroService notified");
 
-            return result;
+            return JsonConvert.DeserializeObject<MicroServiceResult>(await result.Content.ReadAsStringAsync());
+
         }
         catch (Exception e)
         {
             _logger.Log($"MicroService notification failed with error {e.Message}");
             throw;
         }
-
     }
 }

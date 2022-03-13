@@ -38,12 +38,12 @@ public class ServiceUsingHowler : IServiceUsingHowler
         entity.ThrowIfNull();
 
         var message = new MicroServiceCommunicationStructureData(entity, HttpMethod.Post, new Uri("https://localhost:7060/Example/Post"));
-        var response = await _howler.Invoke<MicroServiceCommunicationStructureData, Task<HttpResponseMessage>>(message, StructuresIds.NotifyMicroService);
-        var result = JsonConvert.DeserializeObject<MicroServiceResult>(await response.Content.ReadAsStringAsync());
+        
+        var result = await _howler.Invoke<MicroServiceCommunicationStructureData, Task<MicroServiceResult>>(message, StructuresIds.NotifyMicroService) ;
 
         _howler.InvokeVoid(new EmailDto(dto.Email, "This is how you send an email with Je ne sais quoi!", "Sending notifications"), StructuresIds.SendEmail);
         _howler.InvokeVoid(new SmsDto(dto.PhoneNumber, "This is how you send a text with aplomb!"), StructuresIds.SendSms);
 
-        return result?.Result ?? string.Empty;
+        return result.Response ?? string.Empty;
     }
 }

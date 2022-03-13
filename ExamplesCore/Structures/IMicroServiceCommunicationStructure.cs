@@ -1,8 +1,10 @@
-﻿using ExamplesCore.Structures.StructureDtos;
+﻿using ExamplesCore.Models;
+using ExamplesCore.Structures.StructureDtos;
 
 namespace ExamplesCore.Structures;
 
 public interface IMicroServiceCommunicationStructure
 {
-    Task<HttpResponseMessage> SendToMicroService(MicroServiceCommunicationStructureData data);
+
+    Task<MicroServiceResult?> SendToMicroService(MicroServiceCommunicationStructureData data);
 }
