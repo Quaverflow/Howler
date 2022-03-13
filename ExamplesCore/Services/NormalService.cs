@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using AutoMapper;
 using ExamplesCore.CrossCuttingConcerns;
 using ExamplesCore.Database;
 using ExamplesCore.Helpers;
@@ -8,6 +9,7 @@ using ExamplesCore.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Newtonsoft.Json;
 using Utilities;
 
 namespace ExamplesCore.Services;
@@ -20,8 +22,11 @@ public class NormalService : INormalService
     private readonly IFakeSmsSender _smsSender;
     private readonly IFakeEmailSender _emailSender;
     private readonly IMapper _mapper;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IBaseRepository<Person> _repository;
-    public NormalService(IHttpContextAccessor accessor, IFakeLogger logger, IAuthProvider authProvider, IFakeSmsSender smsSender, IFakeEmailSender emailSender, IMapper mapper, IBaseRepository<Person> repository)
+    public NormalService(IHttpContextAccessor accessor, IFakeLogger logger, IAuthProvider authProvider,
+        IFakeSmsSender smsSender, IFakeEmailSender emailSender, IMapper mapper, IBaseRepository<Person> repository,
+        IHttpClientFactory httpClientFactory)
     {
         _accessor = accessor;
         _logger = logger;
@@ -30,6 +35,7 @@ public class NormalService : INormalService
         _emailSender = emailSender;
         _mapper = mapper;
         _repository = repository;
+        _httpClientFactory = httpClientFactory;
     }
 
     public string GetData()
@@ -61,10 +67,10 @@ public class NormalService : INormalService
             _authProvider.HasAccess(true);
 
             var validator = new DtoNotifiableValidator();
-            var result = await validator.ValidateAsync(dto);
-            if (!result.IsValid)
+            var validationResult = await validator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
             {
-                throw new ValidationException(result.Errors);
+                throw new ValidationException(validationResult.Errors);
             }
 
             var entity = _mapper.Map<Person>(dto);
@@ -73,10 +79,24 @@ public class NormalService : INormalService
 
             _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} succeeded");
 
-            _emailSender.Send(new EmailDto(dto.Email, "This is how you send an email with Je ne sais quoi!", "Sending notifications"));
-            _smsSender.Send(new SmsDto(dto.PhoneNumber, "This is how you send a text with aplomb!"));
+            try
+            {
+                _logger.Log("Begin notifying MicroService");
 
-            return entity.ToJson();
+                var response = await _httpClientFactory.CreateClient().PostAsync("https://localhost:7060/Example/Post", new StringContent(entity.ToJson(), Encoding.UTF8, "application/json"));
+                response.EnsureSuccessStatusCode();
+                _logger.Log("MicroService notified");
+                var result = JsonConvert.DeserializeObject<MicroServiceResult>(await response.Content.ReadAsStringAsync());
+
+                _emailSender.Send(new EmailDto(dto.Email, "This is how you send an email with Je ne sais quoi!", "Sending notifications"));
+                _smsSender.Send(new SmsDto(dto.PhoneNumber, "This is how you send a text with aplomb!"));
+                return result?.Result ?? string.Empty;
+            }
+            catch (Exception e)
+            {
+                _logger.Log($"MicroService notification failed with error {e.Message}");
+                throw;
+            }
         }
         catch (Exception e)
         {
