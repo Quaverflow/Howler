@@ -6,6 +6,7 @@ using ExamplesCore.Services.Repositories;
 using Microsoft.AspNetCore.Http;
 using MonkeyPatcher.MonkeyPatch.Interfaces;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Reflection;
 using ExamplesCore.Profiles;
 using Xunit;
@@ -30,9 +31,11 @@ public class NormalServiceTest
 
         var emailSender = new Proxy<IFakeEmailSender>();
         var smsSender = new Proxy<IFakeSmsSender>();
+        var httpClient = new Proxy<IHttpClientFactory>();
         var mapper = new Mapper(new MapperConfiguration(x => x.AddMaps(Assembly.GetAssembly(typeof(PersonProfile)))));
         var personRepository = new Proxy<IBaseRepository<Person>>();
-        _service = new NormalService(httpContextAccessor.Instance, logger.Instance, auth.Instance, smsSender.Instance, emailSender.Instance, mapper,personRepository.Instance);
+        _service = new NormalService(httpContextAccessor.Instance, logger.Instance, auth.Instance, smsSender.Instance,
+            emailSender.Instance, mapper, personRepository.Instance, httpClient.Instance);
     }
 
     [Fact]
