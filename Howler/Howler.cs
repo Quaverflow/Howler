@@ -4,6 +4,12 @@ namespace Howler;
 
 public class Howler : IHowler
 {
+    internal static IServiceProvider Provider = null!;
+    public Howler(IServiceProvider provider)
+    {
+        Provider = provider;
+    }
+
     private static object? InternalInvoke(Delegate? original, Guid id, object? data = null)
     {
         if (HowlerRegistration.Registrations.TryGetValue(id, out var structure))
@@ -52,6 +58,11 @@ public class Howler : IHowler
     public void InvokeVoid(Action original, Guid id) => InternalInvoke(original, id);
 
     public void InvokeVoid<TData>(Action original, Guid id, TData data) => InternalInvoke(original, id, data);
+
+    public IServiceProvider GetProvider()
+    {
+        throw new NotImplementedException();
+    }
 
     public void InvokeVoid<T>(T data, Guid id) => InternalInvoke(null, id, data);
 

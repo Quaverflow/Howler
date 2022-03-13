@@ -19,7 +19,7 @@ builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
 
 // Cross cutting concerns
 builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
-builder.Services.AddSingleton<IFakeSmsSender, FakeSmsSender>();
+builder.Services.AddScoped<IFakeSmsSender, FakeSmsSender>();
 builder.Services.AddSingleton<IFakeEmailSender, FakeEmailSender>();
 builder.Services.AddScoped<IAuthProvider, AuthProvider>();
 

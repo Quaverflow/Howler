@@ -9,6 +9,11 @@ public partial class InTestHowler : IHowler
 {
     private readonly Dictionary<string, Delegate> _records = new();
 
+    public IServiceProvider GetProvider()
+    {
+        throw new NotImplementedException();
+    }
+
     public void InvokeVoid<T>(T data, Guid id)
     {
         throw new NotImplementedException();

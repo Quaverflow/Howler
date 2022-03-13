@@ -9,7 +9,7 @@ public static class HowlerRegistrationExtensions
     private static bool _servicesRegistered;
 
     /// <summary>
-    /// Registers all the <see cref="IHowlerStructureBuilder"/>.
+    /// Registers all the <see cref="HowlerStructureBuilder"/>.
     /// </summary>
     /// <param name="services"></param>
     /// <param name="executingAssembly"></param>
@@ -17,11 +17,11 @@ public static class HowlerRegistrationExtensions
     public static IServiceCollection RegisterHowler(this IServiceCollection services, Assembly executingAssembly)
     {
         var registrations = executingAssembly.GetTypes()
-            .Where(type => typeof(IHowlerStructureBuilder).IsAssignableFrom(type) && !type.IsInterface).ToList();
+            .Where(type => typeof(HowlerStructureBuilder).IsAssignableFrom(type) && !type.IsInterface).ToList();
 
         foreach (var service in registrations)
         {
-            services.AddTransient(typeof(IHowlerStructureBuilder), service);
+            services.AddTransient(typeof(HowlerStructureBuilder), service);
         }
 
         services.AddTransient<IHowler, Howler>();
@@ -33,7 +33,7 @@ public static class HowlerRegistrationExtensions
         if (!_servicesRegistered)
         {
             var scope = app.ApplicationServices.CreateScope(); 
-            var services = scope.ServiceProvider.GetServices<IHowlerStructureBuilder>();
+            var services = scope.ServiceProvider.GetServices<HowlerStructureBuilder>();
             foreach (var service in services)
             {
                 service.InvokeRegistrations();

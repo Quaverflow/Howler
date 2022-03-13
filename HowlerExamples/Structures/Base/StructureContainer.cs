@@ -4,27 +4,23 @@ using HowlerExamples.Structures.StructureDtos;
 
 namespace HowlerExamples.Structures.Base;
 
-public class StructureContainer : IHowlerStructureBuilder
+public class StructureContainer : HowlerStructureBuilder
 {
-    private readonly IHttpStructure _httpStructureContainer;
-    private readonly INotificationStructure _notificationStructure;
-    private readonly IValidationStructure _validationStructure;
-
-
-    public StructureContainer(INotificationStructure notificationStructure, IValidationStructure validationStructure, IHttpStructure httpStructureContainer)
+    public override void InvokeRegistrations()
     {
-        _notificationStructure = notificationStructure;
-        _validationStructure = validationStructure;
-        _httpStructureContainer = httpStructureContainer;
-    }
+        HowlerRegistration.AddStructure(StructuresIds.Get, method 
+            => Provider.GetRequiredService<IHttpStructure>().GetStructure(method));
+        HowlerRegistration.AddStructure<Dto>(StructuresIds.Post, (method, data)
+            => Provider.GetRequiredService<IHttpStructure>().PostStructure(method, data));
+        HowlerRegistration.AddStructure<DtoNotifiable>(StructuresIds.PostAndNotify, (method, data)
+            => Provider.GetRequiredService<IHttpStructure>().PostStructure(method, data));
 
-    public void InvokeRegistrations()
-    {
-        HowlerRegistration.AddStructure(StructuresIds.Get, method => _httpStructureContainer.GetStructure(method));
-        HowlerRegistration.AddStructure<Dto>(StructuresIds.Post, (method, data) => _httpStructureContainer.PostStructure(method, data));
-        HowlerRegistration.AddStructure<DtoNotifiable>(StructuresIds.PostAndNotify, (method, data) => _httpStructureContainer.PostStructure(method, data));
-        HowlerRegistration.AddDataTransferStructure<EmailDto>(StructuresIds.SendEmail, data => _notificationStructure.SendEmail(data));
-        HowlerRegistration.AddDataTransferStructure<SmsDto>(StructuresIds.SendSms, data => _notificationStructure.SendSms(data));
-        HowlerRegistration.AddDataTransferStructure<IValidationStructureData>(StructuresIds.Validate, data => _validationStructure.Validate(data));
+        HowlerRegistration.AddDataTransferStructure<EmailDto>(StructuresIds.SendEmail, data 
+            => Provider.GetRequiredService<INotificationStructure>().SendEmail(data));
+        HowlerRegistration.AddDataTransferStructure<SmsDto>(StructuresIds.SendSms, data 
+            => Provider.GetRequiredService<INotificationStructure>().SendSms(data));
+
+        HowlerRegistration.AddDataTransferStructure<IValidationStructureData>(StructuresIds.Validate, data
+            => Provider.GetRequiredService<IValidationStructure>().Validate(data));
     }
 }
