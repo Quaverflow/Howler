@@ -16,7 +16,6 @@ public static class ServicesRegistration
 {
     public static void RegisteredStructures(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<StructureContainer>();
         builder.Services.AddScoped<IHttpStructure, HttpStructure>();
         builder.Services.AddScoped<INotificationStructure, NotificationStructure>();
         builder.Services.AddScoped<IValidationStructure, ValidationStructure>();

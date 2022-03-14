@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ExamplesCore.Structures.Base;
 
-public class StructureContainer : HowlerStructureBuilder
+public class HttpStructureContainer : HowlerStructureBuilder
 {
     public override void InvokeRegistrations()
     {
@@ -15,7 +15,13 @@ public class StructureContainer : HowlerStructureBuilder
             => Provider.GetRequiredService<IHttpStructure>().PostStructure(method, data));
         HowlerRegistration.AddStructure<DtoNotifiable>(StructuresIds.PostAndNotify, (method, data)
             => Provider.GetRequiredService<IHttpStructure>().PostStructure(method, data));
+    }
+}
 
+public class InfrastructureStructureContainer : HowlerStructureBuilder
+{
+    public override void InvokeRegistrations()
+    {
         HowlerRegistration.AddDataTransferStructure<EmailDto>(StructuresIds.SendEmail, data 
             => Provider.GetRequiredService<INotificationStructure>().SendEmail(data));
         HowlerRegistration.AddDataTransferStructure<SmsDto>(StructuresIds.SendSms, data 
@@ -28,3 +34,4 @@ public class StructureContainer : HowlerStructureBuilder
             => Provider.GetRequiredService<IMicroServiceCommunicationStructure>().SendToMicroService(data));
     }
 }
+
