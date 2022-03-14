@@ -9,9 +9,3 @@ public abstract class HowlerStructureBuilder : IHowlerStructureBuilder
     /// </summary>
     public abstract void InvokeRegistrations();
 }
-
-public interface IHowlerStructureBuilder
-{
-    public void InvokeRegistrations();
-
-}
