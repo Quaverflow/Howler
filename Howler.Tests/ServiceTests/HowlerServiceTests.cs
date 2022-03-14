@@ -49,9 +49,11 @@ public class HowlerServiceTests
     {
         var dto = new DtoNotifiable("Mirko", "Sangrigoli", 29, "hello@hello.com", "0123456789");
         var personId = Guid.NewGuid();
-        _howler.Register(StructuresIds.Validate);
-        _howler.Register(StructuresIds.SendEmail);
-        _howler.Register(StructuresIds.SendSms);
+        var counter = 0;
+
+        _howler.RegisterVoid(() => counter++, StructuresIds.Validate);
+        _howler.RegisterVoid(() => counter++, StructuresIds.SendEmail);
+        _howler.RegisterVoid(() => counter++, StructuresIds.SendSms);
         _howler.Register<MicroServiceCommunicationStructureData, Task<MicroServiceResult>>(
             x => Task.FromResult(new MicroServiceResult{Response = x.ToJson()}) ,StructuresIds.NotifyMicroService);
 
@@ -68,5 +70,6 @@ public class HowlerServiceTests
         var result = await service.PostDataAndNotify(dto);
 
         Assert.NotEmpty(result);
+        Assert.Equal(3, counter);
     }
 }

@@ -19,9 +19,17 @@ public partial class InTestHowler : IHowler
     {
         if (_records.TryGetValue(id, out var sub))
         {
+            if (sub is Action)
+            {
+                sub.DynamicInvoke();
+            }
+
             if (typeof(TResult) == typeof(Task))
             {
-                sub?.DynamicInvoke(data);
+                if (sub is not Action)
+                {
+                    sub?.DynamicInvoke(data);
+                }
                 return (TResult)(Task.CompletedTask as object);
             }
 
@@ -101,8 +109,10 @@ public partial class InTestHowler
     public void Register(Guid structureId)
        => RegisterInternal(null, structureId);
 
-    public void Register(Action? substitute, Guid structureId)
+
+    public void RegisterVoid(Action? substitute, Guid structureId)
        => RegisterInternal(substitute, structureId);
+
     public void Register<TResult>(Func<TResult>? substitute, Guid structureId)
        => RegisterInternal(substitute, structureId);
 
