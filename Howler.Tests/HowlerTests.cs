@@ -96,7 +96,7 @@ namespace Howler.Tests
         public void TestReturns()
         {
             var howler = new InTestHowler();
-            howler.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 35, TestStructuresIds.Structure1);
+            howler.Register(() => 35, TestStructuresIds.Structure1);
             var res1 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"), TestStructuresIds.Structure1);
             Assert.Equal(35, res1);
 
@@ -106,7 +106,7 @@ namespace Howler.Tests
         public void TestReturns2()
         {
             var howler = new InTestHowler();
-            howler.Register(() => ExampleStaticClass.ReturnLength(A<string>.Value), () => 3, TestStructuresIds.Structure1);
+            howler.Register(() => 3, TestStructuresIds.Structure1);
             var res2 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"), TestStructuresIds.Structure1);
             Assert.Equal(3, res2);
         }
@@ -115,7 +115,7 @@ namespace Howler.Tests
         public void TestReturns3()
         {
             var howler = new InTestHowler();
-            howler.Register<int, string>(() => ExampleStaticClass.ReturnLength(A<string>.Value), x => x.Length + 3, TestStructuresIds.Structure1);
+            howler.Register<string, int>(x => x.Length + 3, TestStructuresIds.Structure1);
             var res23 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"), TestStructuresIds.Structure1);
             Assert.Equal(8, res23);
         }
@@ -126,8 +126,7 @@ namespace Howler.Tests
         public void TestReturns4()
         {
             var howler = new InTestHowler();
-            howler.Register<int, string, int>(() => 
-                ExampleStaticClass.ReturnLength(A<string>.Value, A<int>.Value), (x, y) => x.Length + y + 3, TestStructuresIds.Structure1);
+            howler.Register<string, int, int>((x, y) => x.Length + y + 3, TestStructuresIds.Structure1);
 
             var res223 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello", 10), TestStructuresIds.Structure1);
             Assert.Equal(18, res223);

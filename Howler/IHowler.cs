@@ -2,7 +2,6 @@ namespace Howler;
 
 public interface IHowler
 {
-    IServiceProvider GetProvider();
     void InvokeVoid<T>(T data, Guid id);
     TResult Invoke<T, TResult>(T data, Guid id);
 
