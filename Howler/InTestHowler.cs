@@ -25,9 +25,14 @@ public partial class InTestHowler : IHowler
                 return (TResult)(Task.CompletedTask as object);
             }
 
-            return (TResult)sub?.DynamicInvoke(data);
-             
+            var result = (TResult)sub?.DynamicInvoke(data);
 
+            if (result == null && typeof(TResult).BaseType == typeof(Task))
+            {
+                throw new NotImplementedException("Invocations requiring a Task<T> as result require a registration");
+            }
+
+            return result;
         }
 
         if (typeof(TResult) == typeof(Task))
