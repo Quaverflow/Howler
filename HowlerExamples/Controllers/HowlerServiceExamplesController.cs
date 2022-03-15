@@ -2,6 +2,7 @@ using ExamplesCore.Helpers;
 using ExamplesCore.Models;
 using ExamplesCore.Services;
 using ExamplesCore.Structures.Base;
+using ExamplesCore.Structures.StructureDtos;
 using Howler;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,7 +59,7 @@ public class HowlerServiceExamplesController : ControllerBase
         var result = string.Join("\n", FakesRepository.Logs);
         result += "\n" + string.Join("\n", FakesRepository.EmailsSent);
         result +=" \n" +  string.Join("\n", FakesRepository.SmsSent);
-        result += $"\nsaved entity: {savedEntity}";
+        result += $"\nsaved entity: {savedEntity.Data}";
         FakesRepository.Logs.Clear();
         FakesRepository.EmailsSent.Clear();
         FakesRepository.SmsSent.Clear();

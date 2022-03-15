@@ -1,6 +1,7 @@
 ﻿using ExamplesCore.CrossCuttingConcerns;
 using ExamplesCore.Helpers;
 using ExamplesCore.Models;
+using ExamplesCore.Structures.StructureDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 
@@ -38,7 +39,7 @@ public class HttpStructure : IHttpStructure
         };
     }
 
-    public object? PostStructure(Delegate method, object data)
+    public object? PostStructure(Func<object?> method, object data)
     {
         _logger.Log($"received successfully from IHowlerData {data.ToJson()}");
 
@@ -47,7 +48,7 @@ public class HttpStructure : IHttpStructure
         {
             _authProvider.HasAccess(true);
 
-            var result = method.DynamicInvoke();
+            var result = method.Invoke();
 
             _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} succeeded");
             return result;
@@ -58,7 +59,8 @@ public class HttpStructure : IHttpStructure
             throw;
         };
     }
-    public object? PostStructure(Delegate method, DtoNotifiable data)
+    public async Task<IControllerResponse?> PostNotifiableStructure(Func<Task<IControllerResponse?>> method,
+        DtoNotifiable data)
     {
         _logger.Log($"received successfully {data.ToJson()}");
         _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} has started");
@@ -66,7 +68,7 @@ public class HttpStructure : IHttpStructure
         {
             _authProvider.HasAccess(true);
 
-            var result = method.DynamicInvoke();
+            var result = await method.Invoke();
 
             _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} succeeded");
             return result;

@@ -69,7 +69,7 @@ public class HowlerServiceTests
 
         var result = await service.PostDataAndNotify(dto);
 
-        Assert.NotEmpty(result);
+        Assert.NotEmpty((string)(result.Data));
         Assert.Equal(3, counter);
     }
 }

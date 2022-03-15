@@ -29,9 +29,9 @@ public class ServiceUsingHowler : IServiceUsingHowler
     public void PostData(Dto dto) => dto.ToJson();
 
 
-    public async Task<string> PostDataAndNotify(DtoNotifiable dto)
+    public async Task<IControllerResponse> PostDataAndNotify(DtoNotifiable dto)
     {
-        await _howler.Invoke<IValidationStructureData, Task>(new ValidationStructureData<DtoNotifiable, DtoNotifiableValidator>(dto), StructuresIds.Validate);
+        await _howler.Transmit<IValidationStructureData, Task>(new ValidationStructureData<DtoNotifiable, DtoNotifiableValidator>(dto), StructuresIds.Validate);
 
         var entity = _mapper.Map<Person>(dto);
         entity = await _repository.AddAndSaveAsync(entity);
@@ -39,11 +39,11 @@ public class ServiceUsingHowler : IServiceUsingHowler
 
         var message = new MicroServiceCommunicationStructureData(entity, HttpMethod.Post, new Uri("https://localhost:7060/Example/Post"));
         
-        var result = await _howler.Invoke<MicroServiceCommunicationStructureData, Task<MicroServiceResult>>(message, StructuresIds.NotifyMicroService) ;
+        var result = await _howler.Transmit<MicroServiceCommunicationStructureData, Task<MicroServiceResult>>(message, StructuresIds.NotifyMicroService) ;
 
-        _howler.InvokeVoid(new EmailDto(dto.Email, "This is how you send an email with Je ne sais quoi!", "Sending notifications"), StructuresIds.SendEmail);
-        _howler.InvokeVoid(new SmsDto(dto.PhoneNumber, "This is how you send a text with aplomb!"), StructuresIds.SendSms);
+        _howler.Transmit(new EmailDto(dto.Email, "This is how you send an email with Je ne sais quoi!", "Sending notifications"), StructuresIds.SendEmail);
+        _howler.Transmit(new SmsDto(dto.PhoneNumber, "This is how you send a text with aplomb!"), StructuresIds.SendSms);
 
-        return result.Response ?? string.Empty;
+        return new PostRequestResponse<string>(result.Response ?? string.Empty);
     }
 }

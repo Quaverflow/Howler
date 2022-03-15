@@ -80,7 +80,7 @@ namespace Howler.Tests
         public void TestVoid()
         {
             var howler = new Howler(new ServiceContainer());
-            var ex = Assert.Throws<Exception>(() => howler.InvokeVoid(ExampleStaticClass.VoidLength));
+            var ex = Assert.Throws<Exception>(() => howler.InvokeVoid(ExampleStaticClass.VoidLength, TestStructuresIds.Structure1));
             Assert.Equal("I was called!", ex.Message);
         }
 

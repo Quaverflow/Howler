@@ -12,7 +12,7 @@ public static class HowlerStructures
 
     public static void RegisterTryCatchStructureShape()
     {
-        HowlerRegistration.AddStructure(StructuresIds.TryCatchStructureId, x =>
+        HowlerRegistration.AddStructure<object?>(StructuresIds.TryCatchStructureId, x =>
         {
             try
             {
@@ -30,7 +30,7 @@ public static class HowlerStructures
 
     public static void RegisterOnSayHelloShape()
     {
-        HowlerRegistration.AddStructure(StructuresIds.SayHelloRaisingStructureId, x =>
+        HowlerRegistration.AddStructure<object?>(StructuresIds.SayHelloRaisingStructureId, x =>
         {
             OnSayHello(EventArgs.Empty);
             return x.DynamicInvoke();
@@ -38,7 +38,7 @@ public static class HowlerStructures
     }
     public static void RegisterOnAddToDbShape()
     {
-        HowlerRegistration.AddStructure(StructuresIds.AddToDbRaisingStructureId, x =>
+        HowlerRegistration.AddStructure<object?>(StructuresIds.AddToDbRaisingStructureId, x =>
         {
             OnAddToDb(new AddToDbEventArgs("Hello!"));
             return x.DynamicInvoke();
