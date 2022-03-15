@@ -7,7 +7,8 @@ public interface IHowler
     Task<TResult> InvokeAsync<TResult>(Guid id, Func<Task<TResult>> method, params object?[]? args);
     Task InvokeVoidAsync(Guid id, Func<Task> method, params object?[]? args);
     
-    void Transmit<TData>(TData data, Guid id);
-
-    TResult Transmit<TData, TResult>(TData data, Guid id);
+    void TransmitVoid(Guid id, params object?[]? data);
+    Task TransmitVoidAsync(Guid id, params object?[]? data);
+    TResult Transmit<TResult>(Guid id, params object?[]? data);
+    Task<TResult> TransmitAsync<TResult>(Guid id, params object?[]? data);
 }

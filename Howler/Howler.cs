@@ -12,7 +12,7 @@ public class Howler : IHowler
         _serviceProvider = serviceProvider;
     }
 
-    public TResult Invoke<TResult>(Guid id, Func<TResult> method, params object?[]? args) 
+    public TResult Invoke<TResult>(Guid id, Func<TResult> method, params object?[]? args)
         => InternalInvoke(method, id, args) is TResult result ? result : default!;
 
     public void InvokeVoid(Guid id, Action method, params object?[]? args)
@@ -24,12 +24,12 @@ public class Howler : IHowler
         if (HowlerRegistry.Registrations.TryGetValue(id, out var value))
         {
             var structure = value.Item2;
-            var type = value.Item1;
-            type.BaseType.ThrowIfNull();
+
 
             try
             {
-                var declaringObject = _serviceProvider.GetRequiredService(type.BaseType);
+                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
+
 
                 if (original == null)
                 {
@@ -71,38 +71,52 @@ public class Howler : IHowler
         if (HowlerRegistry.Registrations.TryGetValue(id, out var value))
         {
             var structure = value.Item2;
-            var type = value.Item1;
-            type.BaseType.ThrowIfNull();
+
 
             try
             {
-                var declaringObject = _serviceProvider.GetRequiredService(type.BaseType);
+                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
 
+                object? task;
                 if (original == null)
                 {
-                    var task = data != null && data.Any()
-                        ? data.Length == 1
-                            ? structure.Method.Invoke(declaringObject, new[] { data[0] })
-                            : structure.Method.Invoke(declaringObject, new object[] { data })
-                        : structure.Method.Invoke(declaringObject, null);
+                    if (data != null && data.Any())
+                    {
+                        if (data.Length == 1)
+                        {
+                            task = structure.DynamicInvoke(data[0]);
+                        }
+                        else
+                        {
+                            task = structure.DynamicInvoke(data);
+                        }
+                    }
+                    else
+                    {
+                        task =  structure.DynamicInvoke();
+                    }
+
 
                     var asTask = task as Task;
                     asTask.ThrowIfNull();
 
                     await asTask;
+                }
+                else
+                {
+                    var dataTask = data != null && data.Any()
+                        ? data.Length == 1
+                            ? structure.Method.Invoke(declaringObject, new[] { original, data[0] })
+                            : structure.Method.Invoke(declaringObject, new object[] { original, data })
+                        : structure.Method.Invoke(declaringObject, new object[] { original });
 
+                    var asDataTask = dataTask as Task;
+                    asDataTask.ThrowIfNull();
+
+                    await asDataTask;
                 }
 
-                var dataTask = data != null && data.Any()
-                    ? data.Length == 1
-                        ? structure.Method.Invoke(declaringObject, new[] { original, data[0] })
-                        : structure.Method.Invoke(declaringObject, new object[] { original, data })
-                    : structure.Method.Invoke(declaringObject, new object[] { original });
-
-                var asDataTask = dataTask as Task;
-                asDataTask.ThrowIfNull();
-
-                await asDataTask;
+                return;
             }
 
             catch (Exception ex)
@@ -125,32 +139,31 @@ public class Howler : IHowler
             var structure = value.Item2;
             var type = value.Item1;
             type.BaseType.ThrowIfNull();
-
             try
             {
-                var declaringObject = _serviceProvider.GetRequiredService(type.BaseType);
+                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
 
                 if (original == null)
                 {
                     var task = data != null && data.Any()
                         ? data.Length == 1
-                            ? structure.Method.Invoke(declaringObject, new[] {data[0]})
-                            : structure.Method.Invoke(declaringObject, new object[] {data})
+                            ? structure.Method.Invoke(declaringObject, new[] { data[0] })
+                            : structure.Method.Invoke(declaringObject, new object[] { data })
                         : structure.Method.Invoke(declaringObject, null);
 
-                    var asTask =  task as Task<TResult>;
+                    var asTask = task as Task<TResult>;
                     asTask.ThrowIfNull();
-                   
+
                     return await asTask;
 
                 }
 
                 var dataTask = data != null && data.Any()
                     ? data.Length == 1
-                        ? structure.Method.Invoke(declaringObject, new[] {original, data[0]})
-                        : structure.Method.Invoke(declaringObject, new object[] {original, data})
-                    : structure.Method.Invoke(declaringObject, new object[] {original});
-                
+                        ? structure.Method.Invoke(declaringObject, new[] { original, data[0] })
+                        : structure.Method.Invoke(declaringObject, new object[] { original, data })
+                    : structure.Method.Invoke(declaringObject, new object[] { original });
+
                 var asDataTask = dataTask as Task<TResult>;
                 asDataTask.ThrowIfNull();
 
@@ -171,9 +184,15 @@ public class Howler : IHowler
 
     }
 
-    public void Transmit<TData>(TData data, Guid id)
+    public void TransmitVoid(Guid id, params object?[]? data)
         => InternalInvoke(null, id, data);
 
-    public TResult Transmit<TData, TResult>(TData data, Guid id)
+    public TResult Transmit<TResult>(Guid id, params object?[]? data)
         => InternalInvoke(null, id, data) is TResult result ? result : default!;
+
+    public async Task TransmitVoidAsync(Guid id, params object?[]? data)
+        => await InternalInvokeVoidAsync(null, id, data);
+
+    public async Task<TResult> TransmitAsync<TResult>(Guid id, params object?[]? data)
+        => await InternalInvokeAsync<TResult>(null, id, data) is { } result ? result : default!;
 }

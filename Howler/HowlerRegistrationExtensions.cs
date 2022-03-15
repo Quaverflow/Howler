@@ -22,14 +22,13 @@ public static class HowlerRegistrationExtensions
 
         var types = assemblies.SelectMany(x => x.GetTypes());
 
-        var registrations = types.Where(type => typeof(IHowlerStructureBuilder).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract).ToList();
+        var registrations = types.Where(type => typeof(IHowlerStructure).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract).ToList();
 
         services.AddTransient<IHowler, Howler>();
-        services.AddTransient<IHowlerRegistry, HowlerRegistry>();
         
         foreach (var service in registrations)
         {
-            services.AddTransient(typeof(HowlerStructureBuilder), service);
+            services.AddTransient(typeof(IHowlerStructure), service);
         }
 
         return services;
@@ -40,7 +39,7 @@ public static class HowlerRegistrationExtensions
         if (!_servicesRegistered)
         {
             var scope = app.ApplicationServices.CreateScope(); 
-            var services = scope.ServiceProvider.GetServices<HowlerStructureBuilder>();
+            var services = scope.ServiceProvider.GetServices<IHowlerStructure>();
             foreach (var service in services)
             {
                 service.InvokeRegistrations();

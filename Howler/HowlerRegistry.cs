@@ -7,11 +7,11 @@ public interface IHowlerRegistry
     void AddStructure(Guid id, Delegate func);
 }
 
-internal class HowlerRegistry : IHowlerRegistry
+public class HowlerRegistry 
 {
     internal static readonly Dictionary<Guid, (Type, Delegate)> Registrations = new();
 
-    public void AddStructure(Guid id, Delegate func)
+    public static void AddStructure(Guid id, Delegate func)
     {
         func.Target.ThrowIfNull();
         var target = func.Target.GetType();

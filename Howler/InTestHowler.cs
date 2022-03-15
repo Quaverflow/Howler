@@ -66,6 +66,56 @@ public partial class InTestHowler : IHowler
         throw new NotImplementedException();
     }
 
+    public void TransmitVoid(Guid id, params object?[]? data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task TransmitVoidAsync(Guid id, params object?[]? data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public TResult Transmit<TResult>(Guid id, params object?[]? data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<TResult> TransmitAsync<TResult>(Guid id, params object?[]? data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void TransmitVoid<TData>(Guid id, params object?[]? data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task TransmitVoidAsync<TData>(Guid id, params object?[]? data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public TResult Transmit<TData, TResult>(Guid id, params object?[]? data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<TResult> TransmitAsync<TData, TResult>(Guid id, params object?[]? data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Transmit<TData>(Guid id, TData data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public TResult Transmit<TData, TResult>(Guid id, TData data)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Transmit<TData>(TData data, Guid id)
     {
         throw new NotImplementedException();

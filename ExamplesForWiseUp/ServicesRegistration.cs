@@ -1,17 +1,14 @@
-﻿using System.Reflection;
-using ExamplesForWiseUp.CrossCuttingConcerns;
-using ExamplesForWiseUp.CrossCuttingConcerns.Implementations;
+﻿using ExamplesForWiseUp.CrossCuttingConcerns.Implementations;
 using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 using ExamplesForWiseUp.Database;
 using ExamplesForWiseUp.Repositories;
 using ExamplesForWiseUp.Services.Implementations;
 using ExamplesForWiseUp.Services.Interfaces;
-using ExamplesForWiseUp.Structures.Implementations;
-using ExamplesForWiseUp.Structures.Interfaces;
 using Howler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace ExamplesForWiseUp;
 

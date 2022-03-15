@@ -19,7 +19,7 @@
 	<ItemGroup>
 	  <Folder Include="Services\Implementations\" />
 	  <Folder Include="Services\Interfaces\" />
-	  <Folder Include="Structures\Implementations\" />
 	  <Folder Include="Structures\Interfaces\" />
+	  <Folder Include="Structures\Notifications\" />
 	</ItemGroup>
 </Project>

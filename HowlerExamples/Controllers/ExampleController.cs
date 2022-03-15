@@ -25,19 +25,18 @@ public class ExampleController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SavePerson([FromBody] Dto dto)
     {
-        await _howler.InvokeAsync(StructureIds.Post, ()=> _exampleService.SavePerson(dto), ExampleDbContext.AuthorizedPersonId);
+        var result = await _howler.InvokeAsync(StructureIds.Post, ()=> _exampleService.SavePerson(dto), ExampleDbContext.AuthorizedPersonId);
+
+        var response = $"||\n||Logs: {string.Join("\n||", FakesRepository.Logs)}\n||\n";
+        response += $"||\n||Emails: {string.Join("\n", FakesRepository.EmailsSent)}\n||\n";
+        response += $"||\n||Sms: {string.Join("\n", FakesRepository.SmsSent)}\n||\n";
+        response += $"||\n||Result: {result.ToJson()}\n||\n";
         Cleanup();
-        return Ok();
+        return Ok(response);
     }
 
 
-    [HttpPost]
-    public async Task<IActionResult> SavePerson2([FromBody] Dto dto)
-    {
-        await _exampleService.SavePersonNormal(dto);
-        Cleanup();
-        return Ok();
-    }
+
     private static void Cleanup()
     {
         FakesRepository.Logs.Clear();

@@ -7,19 +7,17 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace ExamplesForWiseUp.Structures.Implementations;
 
-public class HttpStructure : HowlerStructureBuilder
+public class HttpStructure : IHowlerStructure
 {
     private readonly IFakeLogger _logger;
     private readonly IHttpContextAccessor _accessor;
-    private readonly IHowlerRegistry _registry;
     private readonly IAuthProvider _authProvider;
 
-    public HttpStructure(IFakeLogger logger, IAuthProvider authProvider, IHttpContextAccessor accessor, IHowlerRegistry registry)
+    public HttpStructure(IFakeLogger logger, IAuthProvider authProvider, IHttpContextAccessor accessor)
     {
         _logger = logger;
         _authProvider = authProvider;
         _accessor = accessor;
-        _registry = registry;
     }
 
 
@@ -42,8 +40,8 @@ public class HttpStructure : HowlerStructureBuilder
         };
     }
 
-    public override void InvokeRegistrations()
+    public void InvokeRegistrations()
     {
-        _registry.AddStructure(StructureIds.Post, OnPostAsync);
+        HowlerRegistry.AddStructure(StructureIds.Post, OnPostAsync);
     }
 }
