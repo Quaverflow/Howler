@@ -61,6 +61,11 @@ public partial class InTestHowler : IHowler
         throw new NotImplementedException();
     }
 
+    public Task InvokeVoidAsync(Guid id, Func<Task> method, params object?[]? args)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Transmit<TData>(TData data, Guid id)
     {
         throw new NotImplementedException();
@@ -376,5 +381,10 @@ public partial class InTestHowler
         {
             _records.Add(key, substitute);
         }
+    }
+
+    public Task<TResult> InvokeAsync<TResult>(Guid id, Func<Task<TResult>> method, params object?[]? args)
+    {
+        throw new NotImplementedException();
     }
 }

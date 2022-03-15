@@ -32,7 +32,6 @@ public static class HowlerRegistrationExtensions
             services.AddTransient(typeof(HowlerStructureBuilder), service);
         }
 
-
         return services;
     }
 

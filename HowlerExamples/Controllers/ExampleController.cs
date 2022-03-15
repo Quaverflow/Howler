@@ -25,10 +25,12 @@ public class ExampleController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SavePerson([FromBody] Dto dto)
     {
-        await _howler.Invoke(StructureIds.Post, async ()=> await _exampleService.SavePerson(dto), ExampleDbContext.AuthorizedPersonId);
+        await _howler.InvokeAsync(StructureIds.Post, ()=> _exampleService.SavePerson(dto), ExampleDbContext.AuthorizedPersonId);
         Cleanup();
         return Ok();
     }
+
+
     [HttpPost]
     public async Task<IActionResult> SavePerson2([FromBody] Dto dto)
     {

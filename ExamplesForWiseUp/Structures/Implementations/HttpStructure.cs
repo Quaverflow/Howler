@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace ExamplesForWiseUp.Structures.Implementations;
 
-public class HttpStructure : HowlerStructureBuilder, IHttpStructure
+public class HttpStructure : HowlerStructureBuilder
 {
     private readonly IFakeLogger _logger;
     private readonly IHttpContextAccessor _accessor;

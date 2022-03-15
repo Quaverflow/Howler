@@ -20,7 +20,6 @@ public static class ServicesRegistration
     public static void RegisteredStructures(this WebApplicationBuilder builder)
     {
         builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
-        builder.Services.AddScoped<IHttpStructure, HttpStructure>();
     }
     public static void RegisteredCrossCuttingConcerns(this WebApplicationBuilder builder)
     {
