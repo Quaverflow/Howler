@@ -10,6 +10,7 @@ namespace ExamplesForWiseUp.Repositories
         public BaseRepository(ExampleDbContext dbContext)
         {
             DbContext = dbContext;
+            DbContext.Database.EnsureCreated();
         }
 
         public virtual async Task<T?> GetByIdAsync(Guid id)

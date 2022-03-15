@@ -20,14 +20,14 @@ public static class ServicesRegistration
     public static void RegisteredStructures(this WebApplicationBuilder builder)
     {
         builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
-        //builder.Services.AddScoped<IHttpStructure, HttpStructure>();
+        builder.Services.AddScoped<IHttpStructure, HttpStructure>();
     }
     public static void RegisteredCrossCuttingConcerns(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
+        builder.Services.AddScoped<IFakeLogger, FakeLogger>();
         builder.Services.AddScoped<IFakeSmsSender, FakeSmsSender>();
         builder.Services.AddScoped<IFakeEmailSender, FakeEmailSender>();
-        builder.Services.AddScoped<IAuthProvider, AuthProvider>();
+        builder.Services.AddTransient<IAuthProvider, AuthProvider>();
     }
 
     public static void RegisteredInfrastructures(this WebApplicationBuilder builder)

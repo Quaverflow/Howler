@@ -51,6 +51,16 @@ public partial class InTestHowler : IHowler
     }
 
 
+    public TResult Invoke<TResult>(Guid id, Func<TResult> method, params object?[]? args)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void InvokeVoid(Guid id, Action method, params object?[]? args)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Transmit<TData>(TData data, Guid id)
     {
         throw new NotImplementedException();

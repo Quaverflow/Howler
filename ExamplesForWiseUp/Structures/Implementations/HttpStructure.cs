@@ -11,14 +11,17 @@ public class HttpStructure : HowlerStructureBuilder, IHttpStructure
 {
     private readonly IFakeLogger _logger;
     private readonly IHttpContextAccessor _accessor;
+    private readonly IHowlerRegistry _registry;
     private readonly IAuthProvider _authProvider;
 
-    public HttpStructure(IFakeLogger logger, IAuthProvider authProvider, IHttpContextAccessor accessor)
+    public HttpStructure(IFakeLogger logger, IAuthProvider authProvider, IHttpContextAccessor accessor, IHowlerRegistry registry)
     {
         _logger = logger;
         _authProvider = authProvider;
         _accessor = accessor;
+        _registry = registry;
     }
+
 
     public async Task<IHttpStructureDto> OnPostAsync(Func<Task<IHttpStructureDto>> invocation, Guid userId)
     {
@@ -41,7 +44,6 @@ public class HttpStructure : HowlerStructureBuilder, IHttpStructure
 
     public override void InvokeRegistrations()
     {
-        HowlerRegistration.AddStructure<Guid, Task<IHttpStructureDto>>(StructureIds.Post, 
-            async (invocation, id) => await OnPostAsync(invocation, id));
+        _registry.AddStructure(StructureIds.Post, OnPostAsync);
     }
 }

@@ -1,8 +1,11 @@
 ﻿using ExamplesForWiseUp.Models;
+using ExamplesForWiseUp.Structures.Dtos;
 
 namespace ExamplesForWiseUp.Services.Interfaces;
 
 public interface IExampleService
 {
-    Task<Dto> SavePerson(Dto dto);
+    Task<IHttpStructureDto> SavePerson(Dto dto);
+    Task<IHttpStructureDto> SavePersonNormal(Dto dto);
+
 }

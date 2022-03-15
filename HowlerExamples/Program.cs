@@ -11,7 +11,6 @@ builder.RegisteredInfrastructures();
 builder.RegisteredRepositories();
 builder.RegisteredStructures();
 
-
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

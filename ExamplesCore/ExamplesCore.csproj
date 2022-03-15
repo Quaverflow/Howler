@@ -13,7 +13,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-preview.1.22076.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0-preview.1.22076.6" />
 	</ItemGroup>
-	<ItemGroup>
+	<ItemGroup> 
 	  <ProjectReference Include="..\Howler\Howler.csproj" />
 	</ItemGroup>
 </Project>
