@@ -29,16 +29,7 @@ public static class HowlerRegistrationExtensions
         
         foreach (var service in registrations)
         {
-            //services.AddTransient(typeof(HowlerStructureBuilder), service);
-            var ctor = service.GetConstructors().OrderBy(x => x.GetParameters().Length).First();
-            services.AddTransient(ctx =>
-            {
-                var dependencies = ctor.GetParameters().Select(x => ctx.GetRequiredService(x.ParameterType)).ToArray();
-                var instance = Activator.CreateInstance(service, dependencies);
-                var serviceInstance = instance as HowlerStructureBuilder;
-                serviceInstance.ThrowIfNull();
-                return serviceInstance;
-            });
+            services.AddTransient(typeof(HowlerStructureBuilder), service);
         }
 
 
