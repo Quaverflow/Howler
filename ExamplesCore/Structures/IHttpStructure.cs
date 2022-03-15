@@ -5,7 +5,7 @@ namespace ExamplesCore.Structures;
 
 public interface IHttpStructure
 {
-    object? GetStructure(Delegate method);
-    object? PostStructure(Func<object?> method, object data);
+    IControllerResponse? GetStructure(Func<IControllerResponse?> method);
+    void PostStructure(Action method, object data);
     Task<IControllerResponse?> PostNotifiableStructure(Func<Task<IControllerResponse?>> method, DtoNotifiable data);
 }

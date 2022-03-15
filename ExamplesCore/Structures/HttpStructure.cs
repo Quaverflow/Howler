@@ -20,26 +20,26 @@ public class HttpStructure : IHttpStructure
         _authProvider = authProvider;
     }
 
-    public object? GetStructure(Delegate method)
+    public IControllerResponse? GetStructure(Func<IControllerResponse?> method)
     {
-        _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} has started");
+        _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} has started");
         try
         {
             _authProvider.HasAccess(true);
 
-            var result = method.DynamicInvoke();
+            var result = method.Invoke();
 
-            _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} succeeded");
+            _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} succeeded");
             return result;
         }
         catch (Exception e)
         {
-            _logger.Log($"The service  call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
+            _logger.Log($"The service  call to {_accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
             throw;
         };
     }
 
-    public object? PostStructure(Func<object?> method, object data)
+    public void PostStructure(Action method, object data)
     {
         _logger.Log($"received successfully from IHowlerData {data.ToJson()}");
 
@@ -48,10 +48,9 @@ public class HttpStructure : IHttpStructure
         {
             _authProvider.HasAccess(true);
 
-            var result = method.Invoke();
+            method.Invoke();
 
             _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} succeeded");
-            return result;
         }
         catch (Exception e)
         {
@@ -63,19 +62,19 @@ public class HttpStructure : IHttpStructure
         DtoNotifiable data)
     {
         _logger.Log($"received successfully {data.ToJson()}");
-        _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} has started");
+        _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} has started");
         try
         {
             _authProvider.HasAccess(true);
 
             var result = await method.Invoke();
 
-            _logger.Log($"The service call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} succeeded");
+            _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} succeeded");
             return result;
         }
         catch (Exception e)
         {
-            _logger.Log($"The service  call to {_accessor?.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
+            _logger.Log($"The service  call to {_accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
             throw;
         };
     }

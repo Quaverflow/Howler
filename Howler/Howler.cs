@@ -17,10 +17,14 @@ public class Howler : IHowler
             {
                 if (original == null)
                 {
-                    return structure.DynamicInvoke(data);
+                    return data != null && data.Any()
+                        ? data.Length == 1
+                            ? structure.DynamicInvoke(data[0])
+                            : structure.DynamicInvoke(data)
+                        : structure.DynamicInvoke();
                 }
 
-                return data.Any() 
+                return data != null && data.Any() 
                     ? data.Length == 1 
                         ? structure.DynamicInvoke(original, data[0]) 
                         : structure.DynamicInvoke(original, data) 
@@ -39,6 +43,7 @@ public class Howler : IHowler
         }
         throw new InvalidOperationException($"The requested structure was not found for id: {id}");
     }
+    
     public void Transmit<TData>(TData data, Guid id) 
         => InternalInvoke(null, id, data);
 
@@ -51,8 +56,7 @@ public class Howler : IHowler
         => InternalInvoke(original, id) is TResult result ? result : default!;
 
     public TResult Invoke<T1, TResult>
-    (Func<TResult> original, Guid id,
-        T1 arg1)
+    (Func<TResult> original, Guid id, T1 arg1)
         => InternalInvoke(original, id, arg1)
             is TResult result ? result : default!;
 

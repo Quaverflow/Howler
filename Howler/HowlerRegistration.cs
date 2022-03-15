@@ -77,11 +77,6 @@ public class HowlerRegistration
 
     #endregion
 
-
-
-
-
-
     public static void AddDataTransferStructure<T, TResult>(Guid id, Func<T, TResult?> func) => Registrations.Add(id, func);
     public static void AddDataTransferStructure<T>(Guid id, Action<T> func) => Registrations.Add(id, func);
 
