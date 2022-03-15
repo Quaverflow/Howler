@@ -1,5 +1,5 @@
 
-using ExamplesCore;
+using ExamplesForWiseUp;
 using Howler;
 
 

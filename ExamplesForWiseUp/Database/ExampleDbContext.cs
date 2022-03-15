@@ -4,7 +4,7 @@ namespace ExamplesForWiseUp.Database;
 
 public class ExampleDbContext : DbContext
 {
-    public static Guid AuthorizedPersonId;
+    public static Guid AuthorizedPersonId = Guid.NewGuid();
 
     public ExampleDbContext(DbContextOptions<ExampleDbContext> options) : base(options)
     {

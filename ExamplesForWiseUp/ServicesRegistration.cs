@@ -4,6 +4,8 @@ using ExamplesForWiseUp.CrossCuttingConcerns.Implementations;
 using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 using ExamplesForWiseUp.Database;
 using ExamplesForWiseUp.Repositories;
+using ExamplesForWiseUp.Services.Implementations;
+using ExamplesForWiseUp.Services.Interfaces;
 using ExamplesForWiseUp.Structures.Implementations;
 using ExamplesForWiseUp.Structures.Interfaces;
 using Howler;
@@ -40,7 +42,7 @@ public static class ServicesRegistration
 
     public static void RegisteredCoreServices(this WebApplicationBuilder builder)
     {
-
+        builder.Services.AddScoped<IExampleService, ExampleService>();
     }
 
     public static void RegisteredRepositories(this WebApplicationBuilder builder)

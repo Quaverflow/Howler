@@ -1,7 +1,7 @@
-using ExamplesCore.Helpers;
-using ExamplesCore.Models;
-using ExamplesCore.Services;
-using ExamplesCore.Structures.Base;
+using ExamplesForWiseUp.Helpers;
+using ExamplesForWiseUp.Models;
+using ExamplesForWiseUp.Services.Implementations;
+using ExamplesForWiseUp.Services.Interfaces;
 using Howler;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,17 +11,19 @@ namespace HowlerExamples.Controllers;
 [Route("[controller]/[action]")]
 public class ExampleController : ControllerBase
 {
-    private readonly IServiceUsingHowler _serviceUsingHowler;
+    private readonly IExampleService _exampleService;
     private readonly IHowler _howler;
 
-    public ExampleController(IServiceUsingHowler serviceUsingHowler, IHowler howler)
+    public ExampleController( IHowler howler, IExampleService exampleService)
     {
-        _serviceUsingHowler = serviceUsingHowler;
         _howler = howler;
+        _exampleService = exampleService;
     }
 
-    public async Task<IActionResult> PostDataHowlerAndNotify([FromBody] DtoNotifiable dto)
+    [HttpPost]
+    public async Task<IActionResult> SavePerson([FromBody] Dto dto)
     {
+        await _exampleService.SavePerson(dto);
         Cleanup();
         return Ok();
     }
