@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Howler.Tests", "Howler.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HowlerExamples", "HowlerExamples\HowlerExamples.csproj", "{D50ECCCD-7AF3-4AE0-AA2C-412BA3F8E10B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamplesCore", "ExamplesCore\ExamplesCore.csproj", "{0F849243-A92D-40FD-A9BE-E19D0814607E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplesCore", "ExamplesCore\ExamplesCore.csproj", "{0F849243-A92D-40FD-A9BE-E19D0814607E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroServiceExample", "MicroServiceExample\MicroServiceExample.csproj", "{61DFA013-F68F-4D14-8373-1B894B37B5AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroServiceExample", "MicroServiceExample\MicroServiceExample.csproj", "{61DFA013-F68F-4D14-8373-1B894B37B5AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamplesForWiseUp", "ExamplesForWiseUp\ExamplesForWiseUp.csproj", "{21819BEA-455C-48A5-A497-3799C21201AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{61DFA013-F68F-4D14-8373-1B894B37B5AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61DFA013-F68F-4D14-8373-1B894B37B5AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61DFA013-F68F-4D14-8373-1B894B37B5AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21819BEA-455C-48A5-A497-3799C21201AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21819BEA-455C-48A5-A497-3799C21201AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21819BEA-455C-48A5-A497-3799C21201AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21819BEA-455C-48A5-A497-3799C21201AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

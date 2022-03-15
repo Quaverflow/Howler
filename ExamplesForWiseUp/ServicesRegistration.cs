@@ -1,0 +1,50 @@
+﻿using System.Reflection;
+using ExamplesForWiseUp.CrossCuttingConcerns;
+using ExamplesForWiseUp.CrossCuttingConcerns.Implementations;
+using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
+using ExamplesForWiseUp.Database;
+using ExamplesForWiseUp.Repositories;
+using ExamplesForWiseUp.Structures.Implementations;
+using ExamplesForWiseUp.Structures.Interfaces;
+using Howler;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ExamplesForWiseUp;
+
+public static class ServicesRegistration
+{
+    public static void RegisteredStructures(this WebApplicationBuilder builder)
+    {
+        builder.Services.RegisterHowler(Assembly.GetExecutingAssembly());
+        //builder.Services.AddScoped<IHttpStructure, HttpStructure>();
+    }
+    public static void RegisteredCrossCuttingConcerns(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddSingleton<IFakeLogger, FakeLogger>();
+        builder.Services.AddScoped<IFakeSmsSender, FakeSmsSender>();
+        builder.Services.AddScoped<IFakeEmailSender, FakeEmailSender>();
+        builder.Services.AddScoped<IAuthProvider, AuthProvider>();
+    }
+
+    public static void RegisteredInfrastructures(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddControllers();
+        builder.Services.AddDbContext<ExampleDbContext>(options => options.UseInMemoryDatabase("FakeContext"));
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        builder.Services.AddHttpClient();
+    }
+
+    public static void RegisteredCoreServices(this WebApplicationBuilder builder)
+    {
+
+    }
+
+    public static void RegisteredRepositories(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+    }
+}

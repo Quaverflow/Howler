@@ -62,7 +62,6 @@ public class HowlerServiceExamplesController : ControllerBase
         result +=" \n" +  string.Join("\n", FakesRepository.SmsSent);
         result += $"\nsaved entity: {savedEntity.Data}";
 
-
         return Ok(result);
     }
     private void Cleanup()
