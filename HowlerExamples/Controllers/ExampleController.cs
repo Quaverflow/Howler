@@ -35,6 +35,17 @@ public class ExampleController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAsync()
+    {
+        var result = await _howler.InvokeAsync(StructureIds.Get,
+            () => _exampleService.Get());
+       
+        var response = $"\n||Logs: {string.Join("\n||", FakesRepository.Logs)}\n";
+        response += $"\n||Result: {result.ToJson()}\n";
+
+        return Ok(response);
+    }
 
 
 

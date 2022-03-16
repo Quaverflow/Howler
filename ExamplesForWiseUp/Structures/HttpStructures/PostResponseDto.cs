@@ -9,3 +9,13 @@ public class PostResponseDto<T> : IHttpStructureDto
 
     public T Data { get; set; }
 }
+
+public class GetResponseDto<T> : IHttpStructureDto
+{
+    public GetResponseDto(T data)
+    {
+        Data = data;
+    }
+
+    public T Data { get; set; }
+}

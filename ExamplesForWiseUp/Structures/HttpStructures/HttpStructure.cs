@@ -18,6 +18,22 @@ public class HttpStructure : IHowlerStructure
         _accessor = accessor;
     }
 
+    public async Task<IHttpStructureDto> OnGet(Func<Task<IHttpStructureDto>> invocation)
+    {
+        _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} has started");
+        try
+        {
+            var result = await invocation.Invoke();
+
+            _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} succeeded");
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
+            throw;
+        };
+    }
 
     public async Task<IHttpStructureDto> OnPostAsync(Func<Task<IHttpStructureDto>> invocation, Guid userId)
     {
@@ -41,5 +57,6 @@ public class HttpStructure : IHowlerStructure
     public void InvokeRegistrations()
     {
         HowlerRegistry.AddStructure(StructureIds.Post, OnPostAsync);
+        HowlerRegistry.AddStructure(StructureIds.Get, OnGet);
     }
 }

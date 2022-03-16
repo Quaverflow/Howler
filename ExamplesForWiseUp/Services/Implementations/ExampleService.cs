@@ -43,4 +43,10 @@ public class ExampleService : IExampleService
 
         return new PostResponseDto<Dto>(_mapper.Map<Dto>(person));
     }
+
+    public async Task<IHttpStructureDto> Get()
+    {
+        var person = (await _personRepository.ListAllAsync()).First();
+        return new GetResponseDto<Dto>(_mapper.Map<Dto>(person));
+    }
 }
