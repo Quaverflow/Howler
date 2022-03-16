@@ -18,7 +18,7 @@ public class MicroServiceMessagingStructure : IHowlerStructure
         _client = httpClientFactory.CreateClient();
     }
 
-    public async Task<bool> MessageMicroService(MicroserviceMessage message)
+    public async Task MessageMicroService(MicroserviceMessage message)
     {
         try
         {
@@ -32,15 +32,11 @@ public class MicroServiceMessagingStructure : IHowlerStructure
             var response = await _client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             _logger.Log("Micro service responded correctly");
-
-            return true;
         }
         catch (Exception e)
         {
             _logger.Log($"Micro service failed to response with exception{e.Message}");
         }
-
-        return false;
     }
 
     public void InvokeRegistrations()
