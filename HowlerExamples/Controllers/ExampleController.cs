@@ -27,10 +27,10 @@ public class ExampleController : ControllerBase
     {
         var result = await _howler.InvokeAsync(StructureIds.Post, ()=> _exampleService.SavePerson(dto), ExampleDbContext.AuthorizedPersonId);
 
-        var response = $"||\n||Logs: {string.Join("\n||", FakesRepository.Logs)}\n||\n";
-        response += $"||\n||Emails: {string.Join("\n", FakesRepository.EmailsSent)}\n||\n";
-        response += $"||\n||Sms: {string.Join("\n", FakesRepository.SmsSent)}\n||\n";
-        response += $"||\n||Result: {result.ToJson()}\n||\n";
+        var response = $"\n||Logs: {string.Join("\n||", FakesRepository.Logs)}\n";
+        response += $"\n||Emails: {string.Join("\n", FakesRepository.EmailsSent)}\n";
+        response += $"\n||Sms: {string.Join("\n", FakesRepository.SmsSent)}\n";
+        response += $"\n||Result: {result.ToJson()}\n";
         Cleanup();
         return Ok(response);
     }
