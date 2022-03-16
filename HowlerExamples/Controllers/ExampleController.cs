@@ -25,7 +25,8 @@ public class ExampleController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SavePerson([FromBody] Dto dto)
     {
-        var result = await _howler.InvokeAsync(StructureIds.Post, ()=> _exampleService.SavePerson(dto), ExampleDbContext.AuthorizedPersonId);
+        var result = await _howler.InvokeAsync(StructureIds.Post, 
+            ()=> _exampleService.SavePerson(dto), ExampleDbContext.AuthorizedPersonId);
 
         var response = $"\n||Logs: {string.Join("\n||", FakesRepository.Logs)}\n";
         response += $"\n||Emails: {string.Join("\n", FakesRepository.EmailsSent)}\n";

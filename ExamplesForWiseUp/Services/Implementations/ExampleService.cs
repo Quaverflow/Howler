@@ -31,7 +31,7 @@ public class ExampleService : IExampleService
         await _howler.TransmitVoidAsync(StructureIds.SendSms, new SmsDto(person.PhoneNumber, "Beautiful Day!"));
 
         var message = new MicroserviceMessage("https://localhost:7060/Example/Post", HttpMethod.Post, person);
-        var received = await _howler.TransmitAsync<bool>(StructureIds.NotifyMicroService, message);
+        await _howler.TransmitVoidAsync(StructureIds.NotifyMicroService, message);
 
         return new PostResponseDto<Dto>(_mapper.Map<Dto>(person));
     }    

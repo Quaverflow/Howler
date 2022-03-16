@@ -20,6 +20,5 @@
 	  <Folder Include="Services\Implementations\" />
 	  <Folder Include="Services\Interfaces\" />
 	  <Folder Include="Structures\MicroServiceMessaging\" />
-	  <Folder Include="Structures\Notifications\" />
 	</ItemGroup>
 </Project>
