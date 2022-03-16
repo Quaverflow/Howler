@@ -19,6 +19,5 @@
 	<ItemGroup>
 	  <Folder Include="Services\Implementations\" />
 	  <Folder Include="Services\Interfaces\" />
-	  <Folder Include="Structures\MicroServiceMessaging\" />
 	</ItemGroup>
 </Project>
