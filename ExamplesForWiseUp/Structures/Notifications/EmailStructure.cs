@@ -1,5 +1,4 @@
 ﻿using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
-using ExamplesForWiseUp.Models;
 using Howler;
 
 namespace ExamplesForWiseUp.Structures.Notifications;

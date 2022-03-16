@@ -1,7 +1,6 @@
 ﻿using ExamplesCore.Models;
 using ExamplesCore.Structures.StructureDtos;
 using Howler;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ExamplesCore.Structures.Base;
 

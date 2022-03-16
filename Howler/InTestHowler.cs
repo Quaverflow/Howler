@@ -1,182 +1,289 @@
-using DelegateDecompiler;
-using System.Linq.Expressions;
+//using DelegateDecompiler;
+//using System.Linq.Expressions;
+//using Microsoft.Extensions.DependencyInjection;
+//using Utilities;
 
-namespace Howler;
+//namespace Howler;
 
-public partial class InTestHowler : IHowler
-{
-    private readonly Dictionary<Guid, Delegate?> _records = new();
+//public partial class InTestHowler : IHowler
+//{
+//    private readonly Dictionary<Guid, Delegate?> _records = new();
 
-    public TResult Invoke<TResult>(Guid id, Func<TResult> method, params object?[]? args)
-    {
-        throw new NotImplementedException();
-    }
+//    public TResult Invoke<TResult>(Guid id, Func<TResult> method, params object?[]? args)
+//        => InternalInvoke(method, id, args) is TResult result ? result : default!;
 
-    public void InvokeVoid(Guid id, Action method, params object?[]? args)
-    {
-        throw new NotImplementedException();
-    }
+//    public void InvokeVoid(Guid id, Action method, params object?[]? args)
+//        => InternalInvoke(method, id, args);
 
-    public Task InvokeVoidAsync(Guid id, Func<Task> method, params object?[]? args)
-    {
-        throw new NotImplementedException();
-    }
+//    private object? InternalInvoke(Delegate? original, Guid id, params object?[]? data)
+//    {
 
-    public void TransmitVoid(Guid id, params object?[]? data)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task TransmitVoidAsync(Guid id, params object?[]? data)
-    {
-        throw new NotImplementedException();
-    }
-
-    public TResult Transmit<TResult>(Guid id, params object?[]? data)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<TResult> TransmitAsync<TResult>(Guid id, params object?[]? data)
-    {
-        throw new NotImplementedException();
-    }
+//        if (HowlerRegistry.Registrations.TryGetValue(id, out var structure))
+//        {
+//            try
+//            {
+//                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
 
 
+//                if (original == null)
+//                {
+//                    return data != null && data.Any()
+//                        ? data.Length == 1
+//                            ? structure.Method.Invoke(declaringObject, new[] { data[0] })
+//                            : structure.Method.Invoke(declaringObject, new object[] { data })
+//                        : structure.Method.Invoke(declaringObject, null);
+//                }
 
-    private object? InvokeInternal(Delegate original, Guid id, object? data = null)
-    {
-        if (_records.TryGetValue(id, out var sub))
-        {
-            if (sub == null)
-            {
-                return null;
-            }
+//                return data != null && data.Any()
+//                    ? data.Length == 1
+//                        ? structure.Method.Invoke(declaringObject, new[] { original, data[0] })
+//                        : structure.Method.Invoke(declaringObject, new object[] { original, data })
+//                    : structure.Method.Invoke(declaringObject, new object[] { original });
+//            }
 
-            var parameters = sub.Decompile().Parameters;
-            if (!parameters.Any())
-            {
-                return sub.DynamicInvoke();
-            }
+//            catch (Exception ex)
+//            {
+//                // this is to make sure we display the real exception rather than the DynamicInvoke wrapper exception.
+//                if (ex.InnerException != null)
+//                {
+//                    throw ex.InnerException;
+//                }
+//                throw;
+//            }
+//        }
+//        throw new InvalidOperationException($"The requested structure was not found for id: {id}");
+//    }
 
-            var subLambda = sub.Decompile();
-            var subExp = subLambda.Body;
-            if (subExp is MethodCallExpression subMethod)
-            {
-                var args = subMethod.Arguments;
-                return sub.DynamicInvoke(args);
-            }
-            if (subExp is BinaryExpression)
-            {
-                var originalExp = original.Decompile();
-                if (originalExp.Body is MethodCallExpression originalMethod)
-                {
-                    var args = originalMethod.Arguments.Select(x => ((ConstantExpression)x).Value).ToArray();
-                    return sub.DynamicInvoke(args);
-                }
-            }
-        }
+//    public async Task<TResult> InvokeAsync<TResult>(Guid id, Func<Task<TResult>> method, params object?[]? args)
+//        => await InternalInvokeAsync(method, id, args);
 
-        var originalExpression = original.Decompile();
-        if (originalExpression.Body is MethodCallExpression method)
-        {
-            var args = method.Arguments.Select(x => ((ConstantExpression)x).Value).ToArray();
-            return original.DynamicInvoke(args);
-        }
+//    public async Task InvokeVoidAsync(Guid id, Func<Task> method, params object?[]? args)
+//        => await InternalInvokeVoidAsync(method, id, args);
 
-        return original.DynamicInvoke();
-    }
-}
+//    private async Task InternalInvokeVoidAsync(Func<Task>? original, Guid id, params object?[]? data)
+//    {
+//        if (HowlerRegistry.Registrations.TryGetValue(id, out var structure))
+//        {
+//            try
+//            {
+//                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
 
-public partial class InTestHowler
-{
-    public void Register(Guid structureId)
-       => RegisterInternal(null, structureId);
+//                if (original == null)
+//                {
+//                    object? task;
+//                    if (data != null && data.Any())
+//                    {
+//                        if (data.Length == 1)
+//                        {
+//                            task = structure.DynamicInvoke(data[0]);
+//                        }
+//                        else
+//                        {
+//                            task = structure.DynamicInvoke(data);
+//                        }
+//                    }
+//                    else
+//                    {
+//                        task =  structure.DynamicInvoke();
+//                    }
 
 
-    public void RegisterVoid(Action? substitute, Guid structureId)
-       => RegisterInternal(substitute, structureId);
+//                    var asTask = task as Task;
+//                    asTask.ThrowIfNull();
 
-    public void Register<TResult>(Func<TResult>? substitute, Guid structureId)
-       => RegisterInternal(substitute, structureId);
+//                    await asTask;
+//                }
+//                else
+//                {
+//                    var dataTask = data != null && data.Any()
+//                        ? data.Length == 1
+//                            ? structure.Method.Invoke(declaringObject, new[] { original, data[0] })
+//                            : structure.Method.Invoke(declaringObject, new object[] { original, data })
+//                        : structure.Method.Invoke(declaringObject, new object[] { original });
 
-    public void Register<T, TResult>
-        (Func<T, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//                    var asDataTask = dataTask as Task;
+//                    asDataTask.ThrowIfNull();
 
-    public void Register<T1, T2, TResult>
-        (Func<T1, T2, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//                    await asDataTask;
+//                }
 
-    public void Register<T1, T2, T3, TResult>
-        (Func<T1, T2, T3, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//                return;
+//            }
 
-    public void Register<T1, T2, T3, T4, TResult>
-        (Func<T1, T2, T3, T4, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//            catch (Exception ex)
+//            {
+//                // this is to make sure we display the real exception rather than the DynamicInvoke wrapper exception.
+//                if (ex.InnerException != null)
+//                {
+//                    throw ex.InnerException;
+//                }
+//                throw;
+//            }
+//        }
+//        throw new InvalidOperationException($"The requested structure was not found for id: {id}");
+//    }
 
-    public void Register<T1, T2, T3, T4, T5, TResult>
-        (Func<T1, T2, T3, T4, T5, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//    private async Task<TResult> InternalInvokeAsync<TResult>(Func<Task<TResult>>? original, Guid id, params object?[]? data)
+//    {
+//        if (HowlerRegistry.Registrations.TryGetValue(id, out var structure))
+//        {
+//            try
+//            {
+//                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
+//                if (original == null)
+//                {
+//                    object? task;
+//                    if (data != null && data.Any())
+//                    {
+//                        if (data.Length == 1)
+//                        {
+//                            task = structure.DynamicInvoke(data[0]);
+//                        }
+//                        else
+//                        {
+//                            task = structure.DynamicInvoke(data);
+//                        }
+//                    }
+//                    else
+//                    {
+//                        task =  structure.DynamicInvoke();
+//                    }
 
-    public void Register<T1, T2, T3, T4, T5, T6, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//                    var asTask = task as Task<TResult>;
+//                    asTask.ThrowIfNull();
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//                    return await asTask;
+//                }
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//                var dataTask = data != null && data.Any()
+//                    ? data.Length == 1
+//                        ? structure.Method.Invoke(declaringObject, new[] { original, data[0] })
+//                        : structure.Method.Invoke(declaringObject, new object[] { original, data })
+//                    : structure.Method.Invoke(declaringObject, new object[] { original });
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//                var asDataTask = dataTask as Task<TResult>;
+//                asDataTask.ThrowIfNull();
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//                return await asDataTask;
+//            }
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//            catch (Exception ex)
+//            {
+//                // this is to make sure we display the real exception rather than the DynamicInvoke wrapper exception.
+//                if (ex.InnerException != null)
+//                {
+//                    throw ex.InnerException;
+//                }
+//                throw;
+//            }
+//        }
+//        throw new InvalidOperationException($"The requested structure was not found for id: {id}");
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//    }
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//    public void TransmitVoid(Guid id, params object?[]? data)
+//        => InternalInvoke(null, id, data);
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//    public TResult Transmit<TResult>(Guid id, params object?[]? data)
+//        => InternalInvoke(null, id, data) is TResult result ? result : default!;
 
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
-    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>
-        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>? substitute, Guid structureId)
-        => RegisterInternal(substitute, structureId);
+//    public async Task TransmitVoidAsync(Guid id, params object?[]? data)
+//        => await InternalInvokeVoidAsync(null, id, data);
 
-    private void RegisterInternal(Delegate? substitute, Guid key)
-    {
-        if (_records.ContainsKey(key))
-        {
-            _records[key] = substitute;
-        }
-        else
-        {
-            _records.Add(key, substitute);
-        }
-    }
+//    public async Task<TResult> TransmitAsync<TResult>(Guid id, params object?[]? data)
+//        => await InternalInvokeAsync<TResult>(null, id, data) is { } result ? result : default!;
+//}
+//}
 
-    public Task<TResult> InvokeAsync<TResult>(Guid id, Func<Task<TResult>> method, params object?[]? args)
-    {
-        throw new NotImplementedException();
-    }
-}
+//public partial class InTestHowler
+//{
+//    public void Register(Guid structureId)
+//       => RegisterInternal(null, structureId);
+
+
+//    public void RegisterVoid(Action? substitute, Guid structureId)
+//       => RegisterInternal(substitute, structureId);
+
+//    public void Register<TResult>(Func<TResult>? substitute, Guid structureId)
+//       => RegisterInternal(substitute, structureId);
+
+//    public void Register<T, TResult>
+//        (Func<T, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, TResult>
+//        (Func<T1, T2, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, TResult>
+//        (Func<T1, T2, T3, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, TResult>
+//        (Func<T1, T2, T3, T4, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, TResult>
+//        (Func<T1, T2, T3, T4, T5, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+//    public void Register<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>
+//        (Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>? substitute, Guid structureId)
+//        => RegisterInternal(substitute, structureId);
+
+//    private void RegisterInternal(Delegate? substitute, Guid key)
+//    {
+//        if (_records.ContainsKey(key))
+//        {
+//            _records[key] = substitute;
+//        }
+//        else
+//        {
+//            _records.Add(key, substitute);
+//        }
+//    }
+
+//    public Task<TResult> InvokeAsync<TResult>(Guid id, Func<Task<TResult>> method, params object?[]? args)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
+﻿using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 using ExamplesForWiseUp.Database;
 using ExamplesForWiseUp.Repositories;
 using Utilities;

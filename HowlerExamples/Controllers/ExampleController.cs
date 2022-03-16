@@ -1,7 +1,6 @@
 using ExamplesForWiseUp.Database;
 using ExamplesForWiseUp.Helpers;
 using ExamplesForWiseUp.Models;
-using ExamplesForWiseUp.Services.Implementations;
 using ExamplesForWiseUp.Services.Interfaces;
 using ExamplesForWiseUp.Structures;
 using Howler;

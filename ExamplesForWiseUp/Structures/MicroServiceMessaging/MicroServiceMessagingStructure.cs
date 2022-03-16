@@ -1,8 +1,6 @@
-﻿using System.Net.Http.Json;
-using System.Text;
+﻿using System.Text;
 using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 using ExamplesForWiseUp.Helpers;
-using ExamplesForWiseUp.Models;
 using Howler;
 
 namespace ExamplesForWiseUp.Structures.MicroServiceMessaging;

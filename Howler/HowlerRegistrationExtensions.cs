@@ -1,7 +1,6 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Utilities;
 
 namespace Howler;
 

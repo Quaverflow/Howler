@@ -7,7 +7,6 @@ using ExamplesCore.Structures.Base;
 using ExamplesCore.Structures.StructureDtos;
 using ExamplesCore.Validators;
 using Howler;
-using Newtonsoft.Json;
 using Utilities;
 
 namespace ExamplesCore.Services;

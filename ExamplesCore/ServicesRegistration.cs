@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using ExamplesCore.Structures.Base;
 
 namespace ExamplesCore;
 
