@@ -16,14 +16,14 @@ using Xunit;
 
 namespace Howler.Tests;
 
-public class HowlerTests
+public class ExampleServiceTests
 {
     private readonly ExampleService _service;
     private bool _smsCalled;
     private bool _emailCalled;
     private bool _microServiceCalled;
 
-    public HowlerTests()
+    public ExampleServiceTests()
     {
         var howler = new Proxy<IHowler>();
         howler.Setup(x => x.TransmitVoidAsync(Any<Guid>.Value, Any<object?[]?>.Value), inv =>
@@ -66,4 +66,5 @@ public class HowlerTests
         Assert.Equal(data.ToJson(), instance.Data.ToJson());
 
     }
+
 }
