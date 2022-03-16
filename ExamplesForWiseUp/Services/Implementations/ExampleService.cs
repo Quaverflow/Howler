@@ -11,8 +11,6 @@ using ExamplesForWiseUp.Structures.Notifications;
 
 namespace ExamplesForWiseUp.Services.Implementations;
 
-#region ServiceWithHowler
-
 public class ExampleService : IExampleService
 {
     private readonly IBaseRepository<Person> _personRepository;
@@ -28,21 +26,21 @@ public class ExampleService : IExampleService
     public async Task<IHttpStructureDto> SavePerson(Dto dto)
     {
         var person = _mapper.Map<Person>(dto);
-
         await _personRepository.AddAndSaveAsync(person);
 
-        await _howler.TransmitVoidAsync(StructureIds.SendEmail, new EmailDto(person.Email, "hello my friend!", "feeling nice and cute"));
-        await _howler.TransmitVoidAsync(StructureIds.SendSms, new SmsDto(person.PhoneNumber, "Beautiful Day!"));
+        await _howler.InvokeVoidAsync(StructureIds.NotifyItIsChris, async () =>
+        {
+            var email = new EmailDto(person.Email, "hello my friend!", "feeling nice and cute");
+            await _howler.TransmitVoidAsync(StructureIds.SendEmail, email);
 
-        var message = new MicroserviceMessage("https://localhost:7060/Example/Post", HttpMethod.Post, person);
-        await _howler.TransmitVoidAsync(StructureIds.NotifyMicroService, message);
-        
+            var sms = new SmsDto(person.PhoneNumber, "Beautiful Day!");
+            await _howler.TransmitVoidAsync(StructureIds.SendSms, sms);
+
+            var message = new MicroserviceMessage("https://localhost:7060/Example/Post", HttpMethod.Post, person);
+            await _howler.TransmitVoidAsync(StructureIds.NotifyMicroService, message);
+
+        }, person.Name);
+
         return new PostResponseDto<Dto>(_mapper.Map<Dto>(person));
     }
 }
-
-#endregion
-
-#region Service without Howler, for comparisson
-
-#endregion

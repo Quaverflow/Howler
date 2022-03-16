@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 using ExamplesForWiseUp.Database;
 using ExamplesForWiseUp.Helpers;
 using ExamplesForWiseUp.Models;
-using ExamplesForWiseUp.Structures.HttpStructures;
 using Microsoft.AspNetCore.Http;
 using MonkeyPatcher.MonkeyPatch.Interfaces;
 using MonkeyPatcher.MonkeyPatch.Shared;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ExamplesForWiseUp.Structures.HttpStructures;
 using Utilities;
 using Xunit;
 

@@ -25,7 +25,8 @@ public class Howler : IHowler
         {
             try
             {
-                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
+                var declaringObject = _serviceProvider.GetServices<IHowlerStructure>()
+                    .First(x => x.GetType() == structure.Method.DeclaringType);
 
 
                 if (original == null)
@@ -69,7 +70,8 @@ public class Howler : IHowler
         {
             try
             {
-                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
+                var declaringObject = _serviceProvider.GetServices<IHowlerStructure>()
+                    .First(x => x.GetType() == structure.Method.DeclaringType);
 
                 if (original == null)
                 {
@@ -132,7 +134,9 @@ public class Howler : IHowler
         {
             try
             {
-                var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
+                var declaringObject = _serviceProvider.GetServices<IHowlerStructure>()
+                    .First(x => x.GetType() == structure.Method.DeclaringType);
+
                 if (original == null)
                 {
                     object? task;

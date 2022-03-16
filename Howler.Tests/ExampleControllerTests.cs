@@ -1,12 +1,12 @@
-using System;
-using System.Threading.Tasks;
 using ExamplesForWiseUp.Models;
 using ExamplesForWiseUp.Services.Interfaces;
-using ExamplesForWiseUp.Structures.HttpStructures;
 using HowlerExamples.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using MonkeyPatcher.MonkeyPatch.Interfaces;
 using MonkeyPatcher.MonkeyPatch.Shared;
+using System;
+using System.Threading.Tasks;
+using ExamplesForWiseUp.Structures.HttpStructures;
 using Xunit;
 
 namespace Howler.Tests;

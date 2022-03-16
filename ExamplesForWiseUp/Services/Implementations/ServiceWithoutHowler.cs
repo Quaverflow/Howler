@@ -48,26 +48,34 @@ public class ServiceWithoutHowler
             var person = _mapper.Map<Person>(dto);
             await _personRepository.AddAndSaveAsync(person);
             var result = new PostResponseDto<Dto>(_mapper.Map<Dto>(person));
-           
-            await _emailSender.Send(new EmailDto(person.Email, "hello my friend!", "feeling nice and cute"));
-            await _smsSender.Send(new SmsDto(person.PhoneNumber, "Beautiful Day!"));
 
-            try
+
+            if (person.Name.Equals("Chris", StringComparison.InvariantCultureIgnoreCase))
             {
-                _logger.Log("Messaging the Micro Service");
+                var email = new EmailDto(person.Email, "hello my friend!", "feeling nice and cute");
+                await _emailSender.Send(email);
 
-                var response = await _client.PostAsJsonAsync("https://localhost:7060/Example/Post", dto.ToJson());
-                response.EnsureSuccessStatusCode();
+                var sms = new SmsDto(person.PhoneNumber, "Beautiful Day!");
+                await _smsSender.Send(sms);
 
-                _logger.Log("Micro service responded correctly");
+                try
+                {
+                    _logger.Log("Messaging the Micro Service");
+
+                    var response = await _client.PostAsJsonAsync("https://localhost:7060/Example/Post", dto.ToJson());
+                    response.EnsureSuccessStatusCode();
+
+                    _logger.Log("Micro service responded correctly");
+
+                }
+                catch (Exception e)
+                {
+                    _logger.Log($"Micro service failed to response with exception{e.Message}");
+                }
 
             }
-            catch (Exception e)
-            {
-                _logger.Log($"Micro service failed to response with exception{e.Message}");
-            }
-
             _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} succeeded");
+
             return result;
         }
         catch (Exception e)

@@ -1,6 +1,3 @@
-using System;
-using System.Reflection;
-using System.Threading.Tasks;
 using AutoMapper;
 using ExamplesForWiseUp.Database;
 using ExamplesForWiseUp.Helpers;
@@ -9,9 +6,12 @@ using ExamplesForWiseUp.Profiles;
 using ExamplesForWiseUp.Repositories;
 using ExamplesForWiseUp.Services.Implementations;
 using ExamplesForWiseUp.Structures;
-using ExamplesForWiseUp.Structures.HttpStructures;
 using MonkeyPatcher.MonkeyPatch.Interfaces;
 using MonkeyPatcher.MonkeyPatch.Shared;
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using ExamplesForWiseUp.Structures.HttpStructures;
 using Xunit;
 
 namespace Howler.Tests;
@@ -26,6 +26,14 @@ public class ExampleServiceTests
     public ExampleServiceTests()
     {
         var howler = new Proxy<IHowler>();
+        howler.Setup(x => x.InvokeVoidAsync(Any<Guid>.Value, Any<Func<Task>>.Value, Any<string>.Value),
+            inv =>
+            {
+                var method = inv.Arguments[1] as Func<Task>;
+                Assert.NotNull(method);
+                return method.DynamicInvoke();
+            });
+
         howler.Setup(x => x.TransmitVoidAsync(Any<Guid>.Value, Any<object?[]?>.Value), inv =>
         {
             var id = (Guid) inv.Arguments[0];
