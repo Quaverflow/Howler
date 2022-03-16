@@ -1,6 +1,7 @@
-using ExamplesCore.Database;
-using ExamplesCore.Helpers;
-using ExamplesCore.Models;
+
+using ExamplesForWiseUp.Database;
+using ExamplesForWiseUp.Helpers;
+using ExamplesForWiseUp.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MicroServiceExample.Controllers;

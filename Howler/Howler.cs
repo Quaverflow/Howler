@@ -21,11 +21,8 @@ public class Howler : IHowler
     private object? InternalInvoke(Delegate? original, Guid id, params object?[]? data)
     {
 
-        if (HowlerRegistry.Registrations.TryGetValue(id, out var value))
+        if (HowlerRegistry.Registrations.TryGetValue(id, out var structure))
         {
-            var structure = value.Item2;
-
-
             try
             {
                 var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
@@ -68,18 +65,15 @@ public class Howler : IHowler
 
     private async Task InternalInvokeVoidAsync(Func<Task>? original, Guid id, params object?[]? data)
     {
-        if (HowlerRegistry.Registrations.TryGetValue(id, out var value))
+        if (HowlerRegistry.Registrations.TryGetValue(id, out var structure))
         {
-            var structure = value.Item2;
-
-
             try
             {
                 var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
 
-                object? task;
                 if (original == null)
                 {
+                    object? task;
                     if (data != null && data.Any())
                     {
                         if (data.Length == 1)
@@ -134,28 +128,34 @@ public class Howler : IHowler
 
     private async Task<TResult> InternalInvokeAsync<TResult>(Func<Task<TResult>>? original, Guid id, params object?[]? data)
     {
-        if (HowlerRegistry.Registrations.TryGetValue(id, out var value))
+        if (HowlerRegistry.Registrations.TryGetValue(id, out var structure))
         {
-            var structure = value.Item2;
-            var type = value.Item1;
-            type.BaseType.ThrowIfNull();
             try
             {
                 var declaringObject = _serviceProvider.GetRequiredService<IHowlerStructure>();
-
                 if (original == null)
                 {
-                    var task = data != null && data.Any()
-                        ? data.Length == 1
-                            ? structure.Method.Invoke(declaringObject, new[] { data[0] })
-                            : structure.Method.Invoke(declaringObject, new object[] { data })
-                        : structure.Method.Invoke(declaringObject, null);
+                    object? task;
+                    if (data != null && data.Any())
+                    {
+                        if (data.Length == 1)
+                        {
+                            task = structure.DynamicInvoke(data[0]);
+                        }
+                        else
+                        {
+                            task = structure.DynamicInvoke(data);
+                        }
+                    }
+                    else
+                    {
+                        task =  structure.DynamicInvoke();
+                    }
 
                     var asTask = task as Task<TResult>;
                     asTask.ThrowIfNull();
 
                     return await asTask;
-
                 }
 
                 var dataTask = data != null && data.Any()

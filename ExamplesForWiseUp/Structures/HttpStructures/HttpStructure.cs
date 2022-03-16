@@ -1,6 +1,5 @@
 ﻿using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 using ExamplesForWiseUp.Structures.Dtos;
-using ExamplesForWiseUp.Structures.Interfaces;
 using Howler;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;

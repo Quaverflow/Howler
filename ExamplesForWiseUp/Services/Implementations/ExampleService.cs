@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using ExamplesForWiseUp.CrossCuttingConcerns.Implementations;
-using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 using ExamplesForWiseUp.Database;
 using ExamplesForWiseUp.Models;
 using ExamplesForWiseUp.Repositories;
@@ -31,7 +29,10 @@ public class ExampleService : IExampleService
 
         await _howler.TransmitVoidAsync(StructureIds.SendEmail, new EmailDto(person.Email, "hello my friend!", "feeling nice and cute"));
         await _howler.TransmitVoidAsync(StructureIds.SendSms, new SmsDto(person.PhoneNumber, "Beautiful Day!"));
-;
+
+        var message = new MicroserviceMessage("https://localhost:7060/Example/Post", HttpMethod.Post, person);
+        var received = await _howler.TransmitAsync<bool>(StructureIds.NotifyMicroService, message);
+
         return new PostResponseDto<Dto>(_mapper.Map<Dto>(person));
     }    
 
