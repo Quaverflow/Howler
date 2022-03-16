@@ -1,5 +1,5 @@
 ﻿using ExamplesForWiseUp.Models;
-using ExamplesForWiseUp.Structures.Dtos;
+using ExamplesForWiseUp.Structures.HttpStructures;
 
 namespace ExamplesForWiseUp.Services.Interfaces;
 

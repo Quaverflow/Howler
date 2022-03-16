@@ -32,16 +32,11 @@ public class ExampleController : ControllerBase
         response += $"\n||Emails: {string.Join("\n", FakesRepository.EmailsSent)}\n";
         response += $"\n||Sms: {string.Join("\n", FakesRepository.SmsSent)}\n";
         response += $"\n||Result: {result.ToJson()}\n";
-        Cleanup();
+        FakesRepository.Cleanup();
         return Ok(response);
     }
 
 
 
-    private static void Cleanup()
-    {
-        FakesRepository.Logs.Clear();
-        FakesRepository.EmailsSent.Clear();
-        FakesRepository.SmsSent.Clear();
-    }
+
 }

@@ -1,4 +1,4 @@
-﻿namespace ExamplesForWiseUp.Structures.Dtos;
+﻿namespace ExamplesForWiseUp.Structures.HttpStructures;
 
 public interface IHttpStructureDto
 {

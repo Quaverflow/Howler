@@ -6,11 +6,13 @@ using ExamplesForWiseUp.Models;
 using ExamplesForWiseUp.Repositories;
 using ExamplesForWiseUp.Services.Interfaces;
 using ExamplesForWiseUp.Structures;
-using ExamplesForWiseUp.Structures.Dtos;
 using Howler;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using System.Net.Http.Json;
+using ExamplesForWiseUp.Structures.HttpStructures;
+using ExamplesForWiseUp.Structures.MicroServiceMessaging;
+using ExamplesForWiseUp.Structures.Notifications;
 
 namespace ExamplesForWiseUp.Services.Implementations;
 

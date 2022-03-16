@@ -1,4 +1,5 @@
 ﻿using ExamplesForWiseUp.Models;
+using ExamplesForWiseUp.Structures.Notifications;
 
 namespace ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 

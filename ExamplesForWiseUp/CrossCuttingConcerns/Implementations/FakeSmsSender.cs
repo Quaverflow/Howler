@@ -1,6 +1,7 @@
 ﻿using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
 using ExamplesForWiseUp.Helpers;
 using ExamplesForWiseUp.Models;
+using ExamplesForWiseUp.Structures.Notifications;
 
 namespace ExamplesForWiseUp.CrossCuttingConcerns.Implementations;
 

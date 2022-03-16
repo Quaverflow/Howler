@@ -1,10 +1,9 @@
 ﻿using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
-using ExamplesForWiseUp.Structures.Dtos;
 using Howler;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 
-namespace ExamplesForWiseUp.Structures.Implementations;
+namespace ExamplesForWiseUp.Structures.HttpStructures;
 
 public class HttpStructure : IHowlerStructure
 {
@@ -34,7 +33,7 @@ public class HttpStructure : IHowlerStructure
         }
         catch (Exception e)
         {
-            _logger.Log($"The service  call to {_accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
+            _logger.Log($"The service call to {_accessor.HttpContext?.Request.GetDisplayUrl()} failed with exception {e.Message}");
             throw;
         };
     }

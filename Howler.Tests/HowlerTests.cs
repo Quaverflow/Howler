@@ -1,145 +1,68 @@
-//using System;
-//using System.Collections.Generic;
-//using System.ComponentModel.Design;
-//using System.Threading.Tasks;
-//using Howler.Tests.Objects.ExampleObjects;
-//using Howler.Tests.Objects.StructureExamples;
-//using Xunit;
+using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
+using ExamplesForWiseUp.Database;
+using ExamplesForWiseUp.Helpers;
+using ExamplesForWiseUp.Models;
+using ExamplesForWiseUp.Structures.HttpStructures;
+using Microsoft.AspNetCore.Http;
+using MonkeyPatcher.MonkeyPatch.Interfaces;
+using MonkeyPatcher.MonkeyPatch.Shared;
+using System;
+using System.Threading.Tasks;
+using Utilities;
+using Xunit;
 
-//namespace Howler.Tests
-//{
-//    public class HowlerTests
-//    {
-//        public HowlerTests()
-//        {
-//            HowlerStructures.AllStructures();
-//        }
+namespace Howler.Tests
+{
+    public class HowlerTests
+    {
 
-//        #region TryCatch
-//        [Fact]
-//        public void TestReturnsThroughTryCatch_Pass()
-//        {
-//            var howler = new Howler(new ServiceContainer());
-//            var result = howler.Invoke(() => ExampleStaticClass.ReturnLength("hey"), StructuresIds.TryCatchStructureId);
-//            Assert.Equal(3, result);
-//        }
+    }
 
-//        [Fact]
-//        public void TestReturnsThroughTryCatch_Fail()
-//        {
-//            var howler = new Howler(new ServiceContainer());
-//            var result = Assert.Throws<InvalidOperationException>(() => howler.Invoke(() => ExampleStaticClass.ReturnLength(null), StructuresIds.TryCatchStructureId));
-//            Assert.StartsWith("uh-oh", result.Message);
-//        }
-//        #endregion
+    public class TestHttpStructure
+    {
+        private readonly HttpStructure _httpStructure;
 
-//        #region Events
+        public TestHttpStructure()
+        {
+            FakesRepository.Cleanup();
+            var logger = new Proxy<IFakeLogger>();
+            logger.SetupVoid(x => x.Log(Any<string>.Value),
+                inv => FakesRepository.Logs.Add((string)inv.Arguments[0]));
 
-//        private string _hello;
+            var accessor = new Proxy<IHttpContextAccessor>();
+            accessor.Setup(x => x.HttpContext, () => new DefaultHttpContext());
 
-//        [Fact]
-//        public async Task TestEvent_Simple()
-//        {
-//            var howler = new Howler(new ServiceContainer());
+            var auth = new Proxy<IAuthProvider>();
+            auth.Setup(x => x.HasAccess(Any<Guid>.Value),
+                inv =>
+                {
+                   ((Guid)inv.Arguments[0] == ExampleDbContext.AuthorizedPersonId).ThrowIfAssumptionFailed();
+                    return Task.CompletedTask;
+                });
 
-//            HowlerStructures.SayHello += SayHello;
+            _httpStructure = new HttpStructure(logger.Instance, auth.Instance, accessor.Instance);
+        }
 
-//            await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), StructuresIds.SayHelloRaisingStructureId);
-//            Assert.Equal("hello", _hello);
+        [Fact]
+        public async Task PostStructureShould_SucceedAndLog()
+        {
+            var data = new PostResponseDto<Dto>(new Dto("Mary", "Joseph", 32, "abc@gma.com", "12345")) as IHttpStructureDto;
+            var result = await _httpStructure.OnPostAsync(() => Task.FromResult(data), ExampleDbContext.AuthorizedPersonId);
+            Assert.True(FakesRepository.Logs.Count == 2);
+            Assert.Equal("The service call to :// has started", FakesRepository.Logs[0]);
+            Assert.Equal("The service call to :// succeeded", FakesRepository.Logs[1]);
+            Assert.Equal(data.ToJson(), result.ToJson());
+        }
 
-//            HowlerStructures.SayHello -= SayHello;
-//        }
-
-//        private void SayHello(object? sender, EventArgs e)
-//        {
-//            _hello = "hello";
-//        }
-
-//        private readonly List<string> _db = new();
-
-//        [Fact]
-//        public async Task TestEvent_AddToDb()
-//        {
-//            var howler = new Howler(new ServiceContainer());
-//            HowlerStructures.AddToDb += AddHelloToDb;
-
-//            await howler.Invoke(() => ExampleStaticClass.ReturnLengthAsync("hey"), StructuresIds.AddToDbRaisingStructureId);
-//            Assert.Single(_db);
-//            Assert.Equal("Hello!", _db[0]);
-
-//            HowlerStructures.AddToDb -= AddHelloToDb;
-//        }
-//        private void AddHelloToDb(object? sender, AddToDbEventArgs e)
-//        {
-//            _db.Add(e.Hello);
-//        }
-
-//        #endregion
-
-//        [Fact]
-//        public void TestVoid()
-//        {
-//            var howler = new Howler(new ServiceContainer());
-//            var ex = Assert.Throws<Exception>(() => howler.InvokeVoid(ExampleStaticClass.VoidLength, TestStructuresIds.Structure1));
-//            Assert.Equal("I was called!", ex.Message);
-//        }
-
-//        [Fact]
-//        public async Task TestReturnsAsyncTask()
-//        {
-//            var howler = new InTestHowler();
-//            await howler.Invoke(ExampleStaticClass.ReturnAsync, TestStructuresIds.Structure1);
-//            Assert.True(ExampleStaticClass.Check);
-//        }
-
-//        [Fact]
-//        public void TestReturns()
-//        {
-//            var howler = new InTestHowler();
-//            howler.Register(() => 35, TestStructuresIds.Structure1);
-//            var res1 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"), TestStructuresIds.Structure1);
-//            Assert.Equal(35, res1);
-
-//        }
-
-//        [Fact]
-//        public void TestReturns2()
-//        {
-//            var howler = new InTestHowler();
-//            howler.Register(() => 3, TestStructuresIds.Structure1);
-//            var res2 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"), TestStructuresIds.Structure1);
-//            Assert.Equal(3, res2);
-//        }
-
-//        [Fact]
-//        public void TestReturns3()
-//        {
-//            var howler = new InTestHowler();
-//            howler.Register<string, int>(x => x.Length + 3, TestStructuresIds.Structure1);
-//            var res23 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello"), TestStructuresIds.Structure1);
-//            Assert.Equal(8, res23);
-//        }
-
-
-
-//        [Fact]
-//        public void TestReturns4()
-//        {
-//            var howler = new InTestHowler();
-//            howler.Register<string, int, int>((x, y) => x.Length + y + 3, TestStructuresIds.Structure1);
-
-//            var res223 = howler.Invoke(() => ExampleStaticClass.ReturnLength("hello", 10), TestStructuresIds.Structure1);
-//            Assert.Equal(18, res223);
-//        }
-
-//        [Fact]
-//        public void TestConstReturns()
-//        {
-//            var howler = new InTestHowler();
-//            var x = howler.Invoke(() => "hello my baby" + "don't fall!", TestStructuresIds.Structure1);
-//            Assert.True(ExampleStaticClass.Check);
-//        }
-
-
-//    }
-//}
+        [Fact]
+        public async Task PostStructureShould_ThrowsAndLog()
+        {
+            var data = new PostResponseDto<Dto>(new Dto("Mary", "Joseph", 32, "abc@gma.com", "12345")) as IHttpStructureDto;
+            var result = await Assert.ThrowsAsync<InvalidOperationException>(()=> _httpStructure.OnPostAsync(() => Task.FromResult(data), Guid.Empty));
+            Assert.True(FakesRepository.Logs.Count == 2);
+            Assert.Equal("The service call to :// has started", FakesRepository.Logs[0]);
+            Assert.Equal("The service call to :// failed with exception The assumption was false.", FakesRepository.Logs[1]);
+            Assert.Equal("The assumption was false.", result.Message);
+        }
+    }
+}
