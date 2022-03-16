@@ -35,7 +35,7 @@ public class MicroServiceMessagingStructure : IHowlerStructure
         }
         catch (Exception e)
         {
-            _logger.Log($"Micro service failed to response with exception{e.Message}");
+            _logger.Log($"Micro service failed to response with exception {e.Message}");
         }
     }
 

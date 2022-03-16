@@ -40,8 +40,8 @@ namespace Howler.Tests
             using var mp = MonkeyPatcherFactory.GetMonkeyPatch(_service.MessageMicroService);
 
             var outgoingRequestStarted = false;
-            mp.Override<HttpClient, Task<HttpResponseMessage>>(x => x.SendAsync(Any<HttpRequestMessage>.Value), 
-                ()=>
+            mp.Override<HttpClient, Task<HttpResponseMessage>>(x => x.SendAsync(Any<HttpRequestMessage>.Value),
+                () =>
                 {
                     outgoingRequestStarted = true;
                     return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Accepted));
@@ -55,8 +55,23 @@ namespace Howler.Tests
             Assert.Equal("Micro service responded correctly", _fakeLogs[1]);
             Assert.True(outgoingRequestStarted);
         }
-    }   
-    
+
+        [Fact]
+        public async Task ShouldFailsAndLog()
+        {
+            using var mp = MonkeyPatcherFactory.GetMonkeyPatch(_service.MessageMicroService);
+            mp.Override<HttpClient, Task<HttpResponseMessage>>(x => x.SendAsync(Any<HttpRequestMessage>.Value),
+                () => throw new Exception("ups!"));
+
+            var person = new Person();
+            var message = new MicroserviceMessage("https://localhost:7060/Example/Post", HttpMethod.Post, person);
+            await _service.MessageMicroService(message);
+            Assert.True(_fakeLogs.Count == 2);
+            Assert.Equal("Messaging the Micro Service", _fakeLogs[0]);
+            Assert.Equal("Micro service failed to response with exception ups!", _fakeLogs[1]);
+        }
+    }
+
     public class HowlerTests
     {
 
@@ -81,7 +96,7 @@ namespace Howler.Tests
             auth.Setup(x => x.HasAccess(Any<Guid>.Value),
                 inv =>
                 {
-                   ((Guid)inv.Arguments[0] == ExampleDbContext.AuthorizedPersonId).ThrowIfAssumptionFailed();
+                    ((Guid)inv.Arguments[0] == ExampleDbContext.AuthorizedPersonId).ThrowIfAssumptionFailed();
                     return Task.CompletedTask;
                 });
 
@@ -103,7 +118,7 @@ namespace Howler.Tests
         public async Task PostStructureShould_ThrowsAndLog()
         {
             var data = new PostResponseDto<Dto>(new Dto("Mary", "Joseph", 32, "abc@gma.com", "12345")) as IHttpStructureDto;
-            var result = await Assert.ThrowsAsync<InvalidOperationException>(()=> _httpStructure.OnPostAsync(() => Task.FromResult(data), Guid.Empty));
+            var result = await Assert.ThrowsAsync<InvalidOperationException>(() => _httpStructure.OnPostAsync(() => Task.FromResult(data), Guid.Empty));
             Assert.True(_fakeLogs.Count == 2);
             Assert.Equal("The service call to :// has started", _fakeLogs[0]);
             Assert.Equal("The service call to :// failed with exception The assumption was false.", _fakeLogs[1]);
