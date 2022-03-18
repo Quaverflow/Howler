@@ -20,7 +20,6 @@ public class MicroServiceMessagingStructure : IHowlerStructure
     {
         try
         {
-
             _logger.Log("Messaging the Micro Service");
 
             var request = new HttpRequestMessage(message.Method, new Uri(message.Path))
