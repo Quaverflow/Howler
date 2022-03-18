@@ -1,5 +1,6 @@
 
 using ExamplesForWiseUp;
+using ExamplesForWiseUp.Whispers;
 using Howler;
 
 
@@ -9,6 +10,7 @@ builder.RegisteredCoreServices();
 builder.RegisteredCrossCuttingConcerns();
 builder.RegisteredInfrastructures();
 builder.RegisteredRepositories();
+builder.Services.AddTransient<IHowlerWhisper, TryCatchWhisper>();
 builder.RegisteredStructures();
 
 builder.Services.AddSwaggerGen();

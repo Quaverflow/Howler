@@ -11,4 +11,5 @@ public interface IHowler
     Task TransmitVoidAsync(Guid id, params object?[]? data);
     TResult Transmit<TResult>(Guid id, params object?[]? data);
     Task<TResult> TransmitAsync<TResult>(Guid id, params object?[]? data);
+    TResult Whisper<T, TResult>(Func<T, TResult> whisper) where T : class, IHowlerWhisper;
 }

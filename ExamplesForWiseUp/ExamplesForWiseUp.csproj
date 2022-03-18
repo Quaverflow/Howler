@@ -17,6 +17,7 @@
 		<ProjectReference Include="..\Howler\Howler.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="Whispers\" />
 	  <Folder Include="Services\Implementations\" />
 	  <Folder Include="Services\Interfaces\" />
 	</ItemGroup>

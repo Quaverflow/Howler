@@ -7,4 +7,5 @@ public interface IExampleService
 {
     Task<IHttpStructureDto> SavePerson(Dto dto);
     Task<IHttpStructureDto> Get();
+    Task<string> Try(Dto dto);
 }

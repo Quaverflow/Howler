@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Utilities;
 
 namespace Howler;
 
@@ -25,9 +24,7 @@ internal class Howler : IHowler
         {
             try
             {
-                var declaringObject = _serviceProvider.GetServices<IHowlerStructure>()
-                    .First(x => x.GetType() == structure.Method.DeclaringType);
-
+                var declaringObject = ResolveService<IHowlerStructure>(structure.Method.DeclaringType);
 
                 if (original == null)
                 {
@@ -70,9 +67,6 @@ internal class Howler : IHowler
         {
             try
             {
-                var declaringObject = _serviceProvider.GetServices<IHowlerStructure>()
-                    .First(x => x.GetType() == structure.Method.DeclaringType);
-
                 if (original == null)
                 {
                     object? task;
@@ -91,25 +85,23 @@ internal class Howler : IHowler
                     {
                         task =  structure.DynamicInvoke();
                     }
-
-
+                 
                     var asTask = task as Task;
-                    asTask.ThrowIfNull();
+                    await asTask.ThrowIfNull();
 
                     await asTask;
                 }
                 else
                 {
+                    var declaringObject = ResolveService<IHowlerStructure>(structure.Method.DeclaringType);
                     var dataTask = data != null && data.Any()
                         ? data.Length == 1
                             ? structure.Method.Invoke(declaringObject, new[] { original, data[0] })
                             : structure.Method.Invoke(declaringObject, new object[] { original, data })
                         : structure.Method.Invoke(declaringObject, new object[] { original });
 
-                    var asDataTask = dataTask as Task;
-                    asDataTask.ThrowIfNull();
-
-                    await asDataTask;
+                    var asTask = dataTask as Task;
+                    await asTask.ThrowIfNull();
                 }
 
                 return;
@@ -134,9 +126,6 @@ internal class Howler : IHowler
         {
             try
             {
-                var declaringObject = _serviceProvider.GetServices<IHowlerStructure>()
-                    .First(x => x.GetType() == structure.Method.DeclaringType);
-
                 if (original == null)
                 {
                     object? task;
@@ -157,10 +146,12 @@ internal class Howler : IHowler
                     }
 
                     var asTask = task as Task<TResult>;
-                    asTask.ThrowIfNull();
+                    var resultDataTransfer = await asTask.ThrowIfNull();
 
-                    return await asTask;
+                    return resultDataTransfer;
                 }
+
+                var declaringObject = ResolveService<IHowlerStructure>(structure.Method.DeclaringType);
 
                 var dataTask = data != null && data.Any()
                     ? data.Length == 1
@@ -169,9 +160,9 @@ internal class Howler : IHowler
                     : structure.Method.Invoke(declaringObject, new object[] { original });
 
                 var asDataTask = dataTask as Task<TResult>;
-                asDataTask.ThrowIfNull();
+                var result = await asDataTask.ThrowIfNull();
 
-                return await asDataTask;
+                return result;
             }
 
             catch (Exception ex)
@@ -199,4 +190,33 @@ internal class Howler : IHowler
 
     public async Task<TResult> TransmitAsync<TResult>(Guid id, params object?[]? data)
         => await InternalInvokeAsync<TResult>(null, id, data) is { } result ? result : default!;
+
+    public TResult Whisper<T, TResult>(Func<T, TResult> whisper) where T : class, IHowlerWhisper 
+        => whisper.Invoke(ResolveService<T, IHowlerWhisper>());
+
+    public async Task<TResult> Whisper<T, TResult>(Func<T, Task<TResult>> whisper) where T : class, IHowlerWhisper 
+        => await whisper.Invoke(ResolveService<T, IHowlerWhisper>());
+
+    public void Whisper<T>(Action<T> whisper) where T : class, IHowlerWhisper 
+        => whisper.Invoke(ResolveService<T, IHowlerWhisper>());
+
+    public async Task Whisper<T>(Func<T, Task> whisper) where T : class, IHowlerWhisper 
+        => await whisper.Invoke(ResolveService<T, IHowlerWhisper>());
+
+    private TService ResolveService<TService, TInterface>() where TService : class, TInterface where TInterface : class
+    {
+        return (TService) _serviceProvider.GetServices<TInterface>()
+            .First(x => x.GetType() == typeof(TService));
+    }
+
+    private TInterface ResolveService<TInterface>(Type? type) where TInterface : class
+    {
+        return  _serviceProvider.GetServices<TInterface>()
+            .First(x => x.GetType() == type);
+    }
+}
+
+public interface IHowlerWhisper
+{
+
 }

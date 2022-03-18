@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ExamplesForWiseUp.Database;
+using ExamplesForWiseUp.Helpers;
 using ExamplesForWiseUp.Models;
 using ExamplesForWiseUp.Repositories;
 using ExamplesForWiseUp.Services.Interfaces;
@@ -8,6 +9,7 @@ using Howler;
 using ExamplesForWiseUp.Structures.HttpStructures;
 using ExamplesForWiseUp.Structures.MicroServiceMessaging;
 using ExamplesForWiseUp.Structures.Notifications;
+using ExamplesForWiseUp.Whispers;
 
 namespace ExamplesForWiseUp.Services.Implementations;
 
@@ -49,4 +51,18 @@ public class ExampleService : IExampleService
         var person = (await _personRepository.ListAllAsync()).First();
         return new GetResponseDto<Dto>(_mapper.Map<Dto>(person));
     }
+
+    public async Task<string> Try(Dto dto)
+    {
+       var dto2 = _howler.Whisper<TryCatchWhisper, Dto>(x => x.Try(() => Get(dto)));
+       var sayHello =
+           await _howler.Whisper<TryCatchWhisper, Task<string>>(x => x.ReturnTask(() => Task.Run(() => "hello")));
+       return $"{dto2.ToJson()}{sayHello}\n{string.Join("\n", FakesRepository.Logs)}";
+    }
+
+    private Dto Get(Dto dto)
+    {
+        return dto;
+    }
+
 }

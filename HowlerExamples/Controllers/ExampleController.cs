@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using ExamplesForWiseUp.Database;
 using ExamplesForWiseUp.Helpers;
 using ExamplesForWiseUp.Models;
@@ -45,6 +46,13 @@ public class ExampleController : ControllerBase
         response += $"\n||Result: {result.ToJson()}\n";
 
         return Ok(response);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Try([FromBody] Dto dto)
+    {
+        var result = await _exampleService.Try(dto);
+
+        return Ok(result);
     }
 
 

@@ -32,16 +32,22 @@ public static class HowlerRegistrationExtensions
     /// <returns></returns>
     public static IServiceCollection RegisterHowler(this IServiceCollection services, params Assembly[] assemblies)
     {
-        var types = assemblies.SelectMany(x => x.GetTypes());
+        var types = assemblies.SelectMany(x => x.GetTypes().Where(type =>
+            (typeof(IHowlerStructure).IsAssignableFrom(type) || typeof(IHowlerWhisper).IsAssignableFrom(type)) 
+            && !type.IsInterface 
+            && !type.IsAbstract)
+            .ToList());
 
-        var registrations = types.Where(type => typeof(IHowlerStructure).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract).ToList();
-
-        services.AddTransient<IHowler, Howler>();
-        
-        foreach (var service in registrations)
+        foreach (var service in types)
         {
-            services.AddTransient(typeof(IHowlerStructure), service);
+            var howlerInterface = typeof(IHowlerStructure).IsAssignableFrom(service)
+                ? typeof(IHowlerStructure)
+                : typeof(IHowlerWhisper);
+
+            services.AddTransient(howlerInterface, service);
         }
+        services.AddTransient<IHowler, Howler>();
+   
 
         return services;
     }
