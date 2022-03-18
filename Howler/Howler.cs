@@ -3,7 +3,7 @@ using Utilities;
 
 namespace Howler;
 
-public class Howler : IHowler
+internal class Howler : IHowler
 {
     private readonly IServiceProvider _serviceProvider;
 
