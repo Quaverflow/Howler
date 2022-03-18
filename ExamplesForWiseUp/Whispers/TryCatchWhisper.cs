@@ -1,4 +1,5 @@
 ﻿using ExamplesForWiseUp.CrossCuttingConcerns.Interfaces;
+using ExamplesForWiseUp.Helpers;
 using Howler;
 
 namespace ExamplesForWiseUp.Whispers;
@@ -31,5 +32,9 @@ public class TryCatchWhisper : IHowlerWhisper
     {
         _logger.Log("bye");
         return await method.Invoke();
+    }
+    public void Void(Func<string> method)
+    {
+        _logger.Log(method.Invoke());
     }
 }

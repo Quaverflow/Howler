@@ -12,4 +12,7 @@ public interface IHowler
     TResult Transmit<TResult>(Guid id, params object?[]? data);
     Task<TResult> TransmitAsync<TResult>(Guid id, params object?[]? data);
     TResult Whisper<T, TResult>(Func<T, TResult> whisper) where T : class, IHowlerWhisper;
+    Task<TResult> Whisper<T, TResult>(Func<T, Task<TResult>> whisper) where T : class, IHowlerWhisper;
+    void Whisper<T>(Action<T> whisper) where T : class, IHowlerWhisper;
+    Task Whisper<T>(Func<T, Task> whisper) where T : class, IHowlerWhisper;
 }

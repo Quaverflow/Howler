@@ -54,10 +54,15 @@ public class ExampleService : IExampleService
 
     public async Task<string> Try(Dto dto)
     {
-       var dto2 = _howler.Whisper<TryCatchWhisper, Dto>(x => x.Try(() => Get(dto)));
-       var sayHello =
-           await _howler.Whisper<TryCatchWhisper, Task<string>>(x => x.ReturnTask(() => Task.Run(() => "hello")));
-       return $"{dto2.ToJson()}{sayHello}\n{string.Join("\n", FakesRepository.Logs)}";
+        var dto2 = _howler.Whisper<TryCatchWhisper, Dto>(x => x.Try(() => Get(dto)));
+
+        _howler.Whisper<TryCatchWhisper>(x => x.Void(() => "hola"));
+
+        var sayHello = await _howler.Whisper<TryCatchWhisper, Task<string>>(x => x.ReturnTask(() => Task.Run(() => "hello")));
+        await _howler.Whisper<TryCatchWhisper>(x => x.ReturnTask(() => Task.Run(() => "hello")));
+
+
+        return $"{dto2.ToJson()}{sayHello}\n{string.Join("\n", FakesRepository.Logs)}";
     }
 
     private Dto Get(Dto dto)
