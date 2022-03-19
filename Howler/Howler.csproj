@@ -4,6 +4,21 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <Authors>Quaverflow</Authors>
+	  <Description>A library that decouples services from cross cutting concerns.</Description>
+	  <Copyright>Copyright (c) Mirko Sangrigoli 2022</Copyright>
+	  <PackageProjectUrl>https://github.com/Quaverflow/MonkeyPatch/</PackageProjectUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <PackageTags>AOP; Aspect Oriented Programming; Encapsulation; Abstraction;</PackageTags>
+	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+	  <RepositoryUrl>https://github.com/Quaverflow/MonkeyPatch/</RepositoryUrl>
+	  <PackageIcon>Icon.jpg</PackageIcon>
+	  <FileVersion>1.0.0.0</FileVersion>
+	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
+	  <Version>1.0.0</Version>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
