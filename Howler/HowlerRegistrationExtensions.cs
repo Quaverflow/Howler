@@ -40,11 +40,20 @@ public static class HowlerRegistrationExtensions
 
         foreach (var service in types)
         {
-            var howlerInterface = typeof(IHowlerStructure).IsAssignableFrom(service)
-                ? typeof(IHowlerStructure)
-                : typeof(IHowlerWhisper);
+            if (typeof(IHowlerStructure).IsAssignableFrom(service) && typeof(IHowlerWhisper).IsAssignableFrom(service))
+            {
+                services.AddTransient(typeof(IHowlerStructure), service);
+                services.AddTransient(typeof(IHowlerWhisper), service);
 
-            services.AddTransient(howlerInterface, service);
+            }
+            else
+            {
+                var howlerInterface = typeof(IHowlerStructure).IsAssignableFrom(service)
+                    ? typeof(IHowlerStructure)
+                    : typeof(IHowlerWhisper);
+
+                services.AddTransient(howlerInterface, service);
+            }
         }
         services.AddTransient<IHowler, Howler>();
    

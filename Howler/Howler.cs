@@ -215,8 +215,3 @@ internal class Howler : IHowler
             .First(x => x.GetType() == type);
     }
 }
-
-public interface IHowlerWhisper
-{
-
-}
