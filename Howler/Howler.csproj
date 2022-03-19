@@ -7,18 +7,19 @@
 	  <Authors>Quaverflow</Authors>
 	  <Description>A library that decouples services from cross cutting concerns.</Description>
 	  <Copyright>Copyright (c) Mirko Sangrigoli 2022</Copyright>
-	  <PackageProjectUrl>https://github.com/Quaverflow/MonkeyPatch/</PackageProjectUrl>
+	  <PackageProjectUrl>https://github.com/Quaverflow/Howler/</PackageProjectUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageTags>AOP; Aspect Oriented Programming; Encapsulation; Abstraction;</PackageTags>
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-	  <RepositoryUrl>https://github.com/Quaverflow/MonkeyPatch/</RepositoryUrl>
+	  <RepositoryUrl>https://github.com/Quaverflow/Howler/</RepositoryUrl>
 	  <PackageIcon>icon.jpg</PackageIcon>
 	  <FileVersion>1.0.0.0</FileVersion>
 	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
 	  <Version>1.0.0</Version>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageId>Howler.AOP</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
