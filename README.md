@@ -15,4 +15,4 @@ or this:
 
 ![ServiceUsingWhisper](https://user-images.githubusercontent.com/81313844/159101882-a7a53b5a-8dae-4a58-8232-e870b84f037a.jpg)
 
-### See the wiki for a getting started guide.
+### See the [WIKI](https://github.com/Quaverflow/Howler/wiki) for a getting started guide.
